@@ -42,6 +42,13 @@
       100% { transform: translateY(15px) }
     }
 
+    @keyframes nwPulse {
+      0%   { transform: scale(1);   opacity: .85; }
+      50%  { transform: scale(1.06); opacity: 1;   }
+      100% { transform: scale(1);   opacity: .85; }
+    }
+    
+
     /* Toggle del player (botón flotante) */
     .player-toggle {
       position: fixed; right: 1rem; bottom: 5.5rem; z-index: 60;
@@ -68,7 +75,27 @@
   </header>
 
   <!-- ===== HERO ===== -->
-  <section id="top" class="relative overflow-hidden">
+  <!-- <section id="top" class="relative overflow-hidden">  fue remplazada por lo de abajo-->
+
+    <!-- AVATAR NIGHTWOLF CON ARO NEON PULSANTE -->
+    <div class="mx-auto md:mx-0 w-44 h-44 relative">
+    <!-- Aro exterior animado -->
+    <div class="absolute inset-0 rounded-full ring-2 ring-emerald-400/50"
+        style="filter: drop-shadow(0 0 12px #10b981) drop-shadow(0 0 28px #10b981);
+                animation: nwPulse 1.6s ease-in-out infinite;">
+    </div>
+
+    <!-- Glow radial sutil -->
+    <div class="absolute -inset-3 rounded-full"
+        style="background: radial-gradient(60% 60% at 50% 50%, rgba(16,185,129,.25), transparent 70%);
+                filter: blur(14px);"></div>
+
+    <!-- Foto circular -->
+    <img src="assets/img/nightwolf.jpg" alt="NightWolf"
+        class="relative z-10 w-full h-full rounded-full object-cover border border-white/10">
+    </div>
+
+
     <!-- Halo suave en la esquina -->
     <div class="absolute -top-40 -right-40 w-[28rem] h-[28rem] rounded-full bg-emerald-500/10 blur-3xl"></div>
 
