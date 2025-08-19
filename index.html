@@ -22,7 +22,7 @@
     html{ scroll-behavior:smooth }
 
     /* Fondo neon grid sutil */
-    .nw-bg{ position:fixed; inset:0; z-index:-1; background:
+    .nw-bg{ position:fixed; inset:0; z-index:-2; background:
       radial-gradient(1000px 800px at 80% -10%, rgba(16,185,129,.12), transparent 60%),
       radial-gradient(900px 700px at -10% 120%, rgba(16,185,129,.08), transparent 60%),
       repeating-linear-gradient(to right, rgba(16,185,129,.05) 0 1px, transparent 1px 80px),
@@ -30,68 +30,57 @@
       animation:gridFloat 18s ease-in-out infinite alternate }
     @keyframes gridFloat{ 0%{transform:translateY(0)} 100%{transform:translateY(15px)} }
 
-    /* Aro pulsante y multicolor (sin corona) */
+    /* ====== Avatar: aro pulsante verde (más neon) ====== */
     @keyframes nwPulse{ 0%{transform:scale(1)} 50%{transform:scale(1.04)} 100%{transform:scale(1)} }
     @keyframes ringHue {
       0%   { --ring-a:#10b981; --ring-b:#34d399; }
-      40%  { --ring-a:#7b2eff; --ring-b:#a78bfa; }
-      80%  { --ring-a:#ff005d; --ring-b:#ff3b3b; }
+      40%  { --ring-a:#12f7d6; --ring-b:#00ffc6; }
+      80%  { --ring-a:#00e091; --ring-b:#00ffa3; }
       100% { --ring-a:#10b981; --ring-b:#34d399; }
     }
-
-    /* Contenedor del avatar (ahora con lobo SVG) */
-    .wolf-wrap{
-      position:relative; width:16rem; height:16rem;
-      border-radius:9999px;
+    .avatar-wrap{
+      position:relative; width:16rem; height:16rem; border-radius:9999px;
       animation:nwPulse 2.4s ease-in-out infinite, ringHue 10s linear infinite;
+      filter: drop-shadow(0 0 22px rgba(16,185,129,.45));
     }
-    .wolf-ring{
-      position:absolute; inset:0; border-radius:inherit;
-      box-shadow:0 0 28px var(--ring-a);
+    .avatar-ring{
+      position:absolute; inset:0; border-radius:inherit; box-shadow:0 0 32px var(--ring-a);
       border:3px solid transparent;
-      /* borde degradado animado */
-      -webkit-mask: 
+      -webkit-mask:
         radial-gradient(circle at center, #0000 70%, #000 71%) content-box,
         radial-gradient(circle at center, #000 69%, #000 100%);
-      mask: 
+              mask:
         radial-gradient(circle at center, #0000 70%, #000 71%) content-box,
         radial-gradient(circle at center, #000 69%, #000 100%);
-      background:
-        radial-gradient(closest-side, var(--ring-a), var(--ring-b)) border-box;
+      background: radial-gradient(closest-side, var(--ring-a), var(--ring-b)) border-box;
     }
-    .wolf-core{
-      position:absolute; inset:10px; border-radius:inherit; 
-      background:radial-gradient(60% 60% at 50% 50%, rgba(16,185,129,.18), transparent 70%);
-      backdrop-filter: blur(2px);
+    .avatar-core{
+      position:absolute; inset:10px; border-radius:inherit;
+      background: radial-gradient(60% 60% at 50% 50%, rgba(16,185,129,.18), transparent 70%);
       border:1px solid rgba(255,255,255,.08);
-      display:grid; place-items:center;
-      overflow:hidden;
+      overflow:hidden; display:grid; place-items:center;
+      backdrop-filter: blur(2px);
+    }
+    .avatar-img{
+      width:86%; height:86%; border-radius:9999px; object-fit:cover; object-position:center;
+      box-shadow: 0 0 30px rgba(0,255,198,.25);
     }
 
-    /* Lobo SVG */
-    .wolf-svg{ width:68%; height:68%; filter: drop-shadow(0 0 12px rgba(16,185,129,.55)); }
-    .wolf-fill{ fill: #e5e7eb; } /* gris claro */
-    .wolf-stroke{ stroke: rgba(16,185,129,.9); stroke-width: 2; fill: none; }
-
-    /* Confeti */
+    /* Confeti (click en el avatar) */
     .confetti{
       position:absolute; width:8px; height:8px; border-radius:2px;
       top:50%; left:50%; transform: translate(-50%,-50%);
-      opacity: .95; pointer-events:none;
-      animation:confOut 900ms ease-out forwards;
+      opacity:.95; pointer-events:none; animation:confOut 900ms ease-out forwards;
     }
     @keyframes confOut{
       to{
-        transform: translate(-50%,-50%) 
-                   rotate(var(--rot)) 
-                   translate(var(--tx), var(--ty));
-        opacity: 0;
+        transform: translate(-50%,-50%) rotate(var(--rot)) translate(var(--tx), var(--ty));
+        opacity:0;
       }
     }
 
-    /* Canvas de partículas por debajo del contenido pero sobre el fondo grid */
-    #tsparticles{ position:fixed; inset:0; z-index:0; pointer-events:auto; }
-
+    /* Particles detrás de todo */
+    #tsparticles{ position:fixed; inset:0; z-index:-1; pointer-events:none; }
     /* Toggle del player */
     .player-toggle{ position:fixed; right:1rem; bottom:5.5rem; z-index:60 }
   </style>
@@ -141,23 +130,17 @@
         </div>
       </div>
 
-      <!-- Columna derecha: Lobo animado + aro multicolor (sin corona) -->
+      <!-- Columna derecha: TU FOTO con aro pulsante -->
       <div class="relative mx-auto">
-        <div class="wolf-wrap" id="wolfWrap" style="--ring-a:#10b981;--ring-b:#34d399;">
-          <div class="wolf-ring"></div>
-          <div class="wolf-core">
-            <!-- SVG de lobo estilizado -->
-            <svg class="wolf-svg" viewBox="0 0 512 512" aria-hidden="true">
-              <!-- cara -->
-              <path class="wolf-fill" d="M256 92c-54 0-116 42-116 116 0 44 18 74 38 96 20 22 49 36 78 36s58-14 78-36c20-22 38-52 38-96 0-74-62-116-116-116z"/>
-              <!-- ojos -->
-              <circle cx="210" cy="214" r="10" fill="#0ea5e9"/>
-              <circle cx="302" cy="214" r="10" fill="#0ea5e9"/>
-              <!-- contorno -->
-              <path class="wolf-stroke" d="M120 208c0-84 64-128 136-128s136 44 136 128c0 96-88 168-136 168s-136-72-136-168z"/>
-              <!-- hocico -->
-              <path d="M256 248c18 0 32 14 32 32s-14 24-32 24-32-6-32-24 14-32 32-32z" fill="#0f172a" opacity=".8"/>
-            </svg>
+        <div class="avatar-wrap" id="avatarWrap" style="--ring-a:#10b981;--ring-b:#34d399;">
+          <div class="avatar-ring"></div>
+          <div class="avatar-core">
+            <img
+              src="assets/img/imagen%20personal.jpg"
+              alt="Foto de Edgar NightWolf"
+              class="avatar-img"
+              loading="eager"
+            />
           </div>
         </div>
       </div>
@@ -286,10 +269,10 @@
       btn.textContent = hidden ? 'Mostrar música ⤴' : 'Ocultar música ⤵';
     });
 
-    // ===== tsParticles fondo (verde, violeta, rojo) =====
+    // ===== tsParticles fondo (verde, violeta, rojo) - DETRÁS DE TODO =====
     const COLORS = ["#10b981","#7b2eff","#ff005d"];
     tsParticles.load("tsparticles", {
-      fullScreen: { enable: false }, // ya position:fixed en CSS
+      fullScreen: { enable: false },
       particles: {
         number: { value: 80, density: { enable: true, area: 900 } },
         color: { value: COLORS },
@@ -300,33 +283,25 @@
         move: { enable: true, speed: 1.2, outModes: { default: "out" } }
       },
       interactivity: {
-        events: {
-          onHover: { enable: true, mode: "repulse" },
-          onClick: { enable: true, mode: "push" }
-        },
-        modes: {
-          repulse: { distance: 120, duration: .4 },
-          push: { quantity: 4 }
-        }
+        events: { onHover: { enable: false }, onClick: { enable: false } },
+        modes: {}
       },
       detectRetina: true
     });
 
-    // ===== Explosión de confeti desde el lobo =====
-    const wolf = document.getElementById('wolfWrap');
+    // ===== Explosión de confeti desde el avatar =====
+    const avatar = document.getElementById('avatarWrap');
     function boomAt(el){
       const rect = el.getBoundingClientRect();
       const cx = rect.left + rect.width/2;
       const cy = rect.top + rect.height/2;
-
       const N = 42;
       for(let i=0;i<N;i++){
         const piece = document.createElement('div');
         piece.className = 'confetti';
-        const color = COLORS[i % COLORS.length];
-        piece.style.background = color;
-        piece.style.boxShadow = `0 0 10px ${color}`;
-        // radio y dirección al azar
+        const c = COLORS[i % COLORS.length];
+        piece.style.background = c;
+        piece.style.boxShadow = `0 0 10px ${c}`;
         const angle = Math.random()*360;
         const radius = 120 + Math.random()*120;
         piece.style.setProperty('--rot', angle+'deg');
@@ -338,7 +313,18 @@
         setTimeout(()=> piece.remove(), 1000);
       }
     }
-    wolf.addEventListener('click', () => boomAt(wolf));
+    avatar.addEventListener('click', () => boomAt(avatar));
   </script>
 </body>
 </html>
+<script>
+  // Avatar pulsante
+  const avatarWrap = document.getElementById('avatarWrap');
+  avatarWrap.addEventListener('mouseover', () => {
+    avatarWrap.style.setProperty('--ring-a', '#12f7d6');
+    avatarWrap.style.setProperty('--ring-b', '#00ffc6');
+  });
+  avatarWrap.addEventListener('mouseout', () => {
+    avatarWrap.style.setProperty('--ring-a', '#10b981');
+    avatarWrap.style.setProperty('--ring-b', '#34d399');
+  });
