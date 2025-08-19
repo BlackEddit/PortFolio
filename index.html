@@ -9,6 +9,9 @@
   <!-- Partículas -->
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
 
+  <!-- PRELOAD de tu foto (con espacio escapado) -->
+  <link rel="preload" as="image" href="assets/img/imagen%20personal.jpg" />
+
   <style>
     /* ====== NIGHTWOLF VIBE ====== */
     .nw-glow{ text-shadow:0 0 10px #00ffc6,0 0 20px #00ffc6,0 0 40px #00ffc6 }
@@ -73,14 +76,12 @@
       opacity:.95; pointer-events:none; animation:confOut 900ms ease-out forwards;
     }
     @keyframes confOut{
-      to{
-        transform: translate(-50%,-50%) rotate(var(--rot)) translate(var(--tx), var(--ty));
-        opacity:0;
-      }
+      to{ transform: translate(-50%,-50%) rotate(var(--rot)) translate(var(--tx), var(--ty)); opacity:0; }
     }
 
-    /* Particles detrás de todo */
+    /* Particles detrás de todo y sin bloquear eventos */
     #tsparticles{ position:fixed; inset:0; z-index:-1; pointer-events:none; }
+
     /* Toggle del player */
     .player-toggle{ position:fixed; right:1rem; bottom:5.5rem; z-index:60 }
   </style>
@@ -269,10 +270,11 @@
       btn.textContent = hidden ? 'Mostrar música ⤴' : 'Ocultar música ⤵';
     });
 
-    // ===== tsParticles fondo (verde, violeta, rojo) - DETRÁS DE TODO =====
+    // ===== tsParticles: detrás y reaccionando al mouse =====
     const COLORS = ["#10b981","#7b2eff","#ff005d"];
     tsParticles.load("tsparticles", {
-      fullScreen: { enable: false },
+      fullScreen: { enable: false },     // usamos nuestro contenedor fijo
+      detectRetina: true,
       particles: {
         number: { value: 80, density: { enable: true, area: 900 } },
         color: { value: COLORS },
@@ -283,10 +285,17 @@
         move: { enable: true, speed: 1.2, outModes: { default: "out" } }
       },
       interactivity: {
-        events: { onHover: { enable: false }, onClick: { enable: false } },
-        modes: {}
-      },
-      detectRetina: true
+        detectsOn: "window",             // <- capta el mouse aunque el canvas tenga pointer-events:none
+        events: {
+          onHover: { enable: true, mode: "repulse" },   // responde al movimiento
+          onClick: { enable: true, mode: "push" },      // opcional: clic agrega partículas
+          resize: true
+        },
+        modes: {
+          repulse: { distance: 120, duration: .4 },
+          push: { quantity: 4 }
+        }
+      }
     });
 
     // ===== Explosión de confeti desde el avatar =====
@@ -297,34 +306,33 @@
       const cy = rect.top + rect.height/2;
       const N = 42;
       for(let i=0;i<N;i++){
-        const piece = document.createElement('div');
-        piece.className = 'confetti';
+        const d = document.createElement('div');
+        d.className = 'confetti';
         const c = COLORS[i % COLORS.length];
-        piece.style.background = c;
-        piece.style.boxShadow = `0 0 10px ${c}`;
+        d.style.background = c;
+        d.style.boxShadow = `0 0 10px ${c}`;
         const angle = Math.random()*360;
         const radius = 120 + Math.random()*120;
-        piece.style.setProperty('--rot', angle+'deg');
-        piece.style.setProperty('--tx', `${radius*Math.cos(angle*Math.PI/180)}px`);
-        piece.style.setProperty('--ty', `${radius*Math.sin(angle*Math.PI/180)}px`);
-        piece.style.left = cx+'px';
-        piece.style.top  = cy+'px';
-        document.body.appendChild(piece);
-        setTimeout(()=> piece.remove(), 1000);
+        d.style.setProperty('--rot', angle+'deg');
+        d.style.setProperty('--tx', `${radius*Math.cos(angle*Math.PI/180)}px`);
+        d.style.setProperty('--ty', `${radius*Math.sin(angle*Math.PI/180)}px`);
+        d.style.left = cx+'px';
+        d.style.top  = cy+'px';
+        document.body.appendChild(d);
+        setTimeout(()=> d.remove(), 1000);
       }
     }
     avatar.addEventListener('click', () => boomAt(avatar));
+
+    // Hover del aro: sube el neon
+    avatar.addEventListener('mouseover', () => {
+      avatar.style.setProperty('--ring-a', '#12f7d6');
+      avatar.style.setProperty('--ring-b', '#00ffc6');
+    });
+    avatar.addEventListener('mouseout', () => {
+      avatar.style.setProperty('--ring-a', '#10b981');
+      avatar.style.setProperty('--ring-b', '#34d399');
+    });
   </script>
 </body>
 </html>
-<script>
-  // Avatar pulsante
-  const avatarWrap = document.getElementById('avatarWrap');
-  avatarWrap.addEventListener('mouseover', () => {
-    avatarWrap.style.setProperty('--ring-a', '#12f7d6');
-    avatarWrap.style.setProperty('--ring-b', '#00ffc6');
-  });
-  avatarWrap.addEventListener('mouseout', () => {
-    avatarWrap.style.setProperty('--ring-a', '#10b981');
-    avatarWrap.style.setProperty('--ring-b', '#34d399');
-  });
