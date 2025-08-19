@@ -1,60 +1,247 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portafolio | NightWolf</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NightWolf · Portafolio</title>
+  <meta name="description" content="Portafolio de Edgar (NightWolf): Dashboards Power BI, modelos ML y proyectos de IA aplicada." />
   <script src="https://cdn.tailwindcss.com"></script>
+
   <style>
-    /* Glow animado para detalles */
-    .glow {
-      text-shadow: 0 0 10px #00ffc6, 0 0 20px #00ffc6, 0 0 40px #00ffc6;
+    /* ====== NIGHTWOLF VIBE EXTRA ====== */
+
+    /* Glow para títulos */
+    .nw-glow { text-shadow: 0 0 10px #00ffc6, 0 0 20px #00ffc6, 0 0 40px #00ffc6; }
+
+    /* Hover suave para cards */
+    .card { transition: transform .18s ease, box-shadow .18s ease; }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+
+    /* Brillito de botón al pasar */
+    .shine { position: relative; overflow: hidden; }
+    .shine::after { content:""; position:absolute; inset:0; transform:translateX(-120%);
+      background: linear-gradient(120deg,transparent 30%,rgba(255,255,255,.2) 50%,transparent 70%);
+      transition: transform .6s ease; }
+    .shine:hover::after { transform:translateX(120%); }
+
+    /* Scroll suave entre secciones */
+    html { scroll-behavior: smooth; }
+
+    /* Fondo “neon grid” animado: sutil para no distraer el BI */
+    .nw-bg {
+      position: fixed; inset: 0; z-index: -1;
+      background:
+        radial-gradient(1000px 800px at 80% -10%, rgba(16,185,129,.12), transparent 60%),
+        radial-gradient(900px 700px at -10% 120%, rgba(16,185,129,.08), transparent 60%),
+        repeating-linear-gradient( to right, rgba(16,185,129,.05) 0 1px, transparent 1px 80px),
+        repeating-linear-gradient( to bottom, rgba(16,185,129,.04) 0 1px, transparent 1px 80px);
+      animation: gridFloat 18s ease-in-out infinite alternate;
     }
-    .fade-in {
-      animation: fadeIn 2s ease-in forwards;
-      opacity: 0;
+    @keyframes gridFloat {
+      0%   { transform: translateY(0px) }
+      100% { transform: translateY(15px) }
     }
-    @keyframes fadeIn {
-      to { opacity: 1; }
+
+    /* Toggle del player (botón flotante) */
+    .player-toggle {
+      position: fixed; right: 1rem; bottom: 5.5rem; z-index: 60;
     }
   </style>
 </head>
-<body class="bg-zinc-950 text-gray-100 font-sans">
-  
-  <!-- HEADER -->
-  <header class="text-center py-12">
-    <h1 class="text-5xl font-bold glow">NightWolf</h1>
-    <p class="text-gray-400 mt-2">Portafolio Digital • Data + Power BI + AI Engineer</p>
+
+<body class="bg-zinc-950 text-zinc-100 font-sans selection:bg-emerald-500/30">
+  <!-- Fondo animado -->
+  <div class="nw-bg"></div>
+
+  <!-- ===== NAV ===== -->
+  <header class="sticky top-0 z-50 border-b border-white/10 bg-zinc-950/70 backdrop-blur">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="#top" class="text-xl font-bold tracking-wide nw-glow">NightWolf<span class="text-emerald-400">.dev</span></a>
+      <nav class="hidden sm:flex gap-6 text-sm">
+        <a href="#dashboards" class="hover:text-emerald-400">Dashboards</a>
+        <a href="#modelos" class="hover:text-emerald-400">Modelos</a>
+        <a href="#proyecto-estrella" class="hover:text-emerald-400">Proyecto Chingón</a>
+        <a href="#contacto" class="hover:text-emerald-400">Contacto</a>
+      </nav>
+      <a href="cv.pdf" class="text-sm px-3 py-1.5 rounded-full border border-white/15 hover:border-emerald-500/60 hover:text-emerald-300">CV</a>
+    </div>
   </header>
 
-  <!-- SECCIÓN HERO -->
-  <section class="flex flex-col items-center px-6 text-center fade-in">
-    <h2 class="text-3xl font-semibold mb-4">🚀 Bienvenido a mi vitrina</h2>
-    <p class="text-gray-400 max-w-xl">
-      Aquí vas a encontrar lo que hago: dashboards, visualizaciones, proyectos de AI y experimentos con datos.
-      Todo real, todo <span class="text-emerald-400 font-bold">hands-on</span>.
-    </p>
+  <!-- ===== HERO ===== -->
+  <section id="top" class="relative overflow-hidden">
+    <!-- Halo suave en la esquina -->
+    <div class="absolute -top-40 -right-40 w-[28rem] h-[28rem] rounded-full bg-emerald-500/10 blur-3xl"></div>
+
+    <div class="max-w-6xl mx-auto px-4 py-14 sm:py-20 grid md:grid-cols-2 gap-10 items-center">
+      <div>
+        <h1 class="text-4xl sm:text-5xl font-extrabold leading-tight">
+          Edgar <span class="text-emerald-400">“NightWolf”</span>
+          <span class="block text-2xl sm:text-3xl mt-2">Data · BI · IA Aplicada</span>
+        </h1>
+        <p class="mt-4 text-zinc-300 max-w-prose">
+          Construyo dashboards con intención (Power BI + DAX/HTML), modelos que sirven al negocio y experiencias UI que cuentan historias claras.
+        </p>
+        <div class="mt-6 flex gap-3">
+          <a href="#proyecto-estrella" class="shine inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500">Ver proyecto chingón</a>
+          <a href="#dashboards" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-white/20 hover:border-emerald-400/60">Dashboards</a>
+        </div>
+        <div class="mt-6 text-xs text-zinc-400 flex items-center gap-3">
+          <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Play Axis · Podio + Barra scrollable · SLA Gauge · Medidas compactas · RAG + Orquestación</span>
+        </div>
+      </div>
+
+      <!-- Imagen/GIF de portada (déjala por ahora y cámbiala luego) -->
+      <div class="rounded-2xl p-4 sm:p-6 border border-white/10 bg-white/5">
+        <img src="assets/img/hero_demo.png" alt="Preview" class="w-full rounded-lg border border-white/10" />
+      </div>
+    </div>
   </section>
 
-  <!-- PROYECTO DESTACADO -->
-  <section class="mt-16 px-6">
-    <h3 class="text-2xl font-bold border-b border-emerald-500 inline-block pb-1">📊 Proyecto Destacado</h3>
-    <article class="bg-zinc-900 mt-6 rounded-2xl shadow-lg p-6">
-      <h4 class="text-xl font-semibold">Ranking de Socios</h4>
-      <p class="text-gray-400 mb-4">Podio dinámico + barras scrollables con Play Axis en Power BI.</p>
-      <iframe 
-        class="w-full aspect-video rounded-xl border border-emerald-500"
-        src="AQUI_VA_TU_LINK_DE_POWERBI"
-        frameborder="0"
-        allowfullscreen>
-      </iframe>
+  <!-- ===== DASHBOARDS (Power BI) ===== -->
+  <section id="dashboards" class="max-w-6xl mx-auto px-4 py-12 sm:py-16">
+    <div class="flex items-end justify-between">
+      <h2 class="text-2xl sm:text-3xl font-bold">Dashboards</h2>
+      <a href="#contacto" class="text-sm text-emerald-400 hover:underline">¿Colaboramos?</a>
+    </div>
+
+    <!-- Card principal (con tu iframe actualizado) -->
+    <article class="card rounded-2xl border border-white/10 bg-zinc-900/60 p-5 mt-6">
+      <header class="flex items-center justify-between">
+        <h3 class="text-lg font-semibold">🏆 Complementos de Tarifa 2025</h3>
+        <span class="text-xs text-zinc-400">Power BI</span>
+      </header>
+      <p class="text-sm text-zinc-300 mt-2">Dashboard con visuales personalizados, navegación clara y enfoque en comparativas.</p>
+
+      <!-- Contenedor con borde verde y radios -->
+      <div class="mt-3 aspect-video rounded-xl overflow-hidden border border-emerald-500">
+        <!-- ⬇⬇ Tu embed correcto de Power BI ⬇⬇ -->
+        <iframe
+          title="COMPLEMENTOS DE TARIFA 2025"
+          width="100%" height="100%"
+          src="https://app.powerbi.com/view?r=eyJrIjoiNjhhYTRmYzMtZTI4Zi00MzlhLWEwN2QtMGNmYjEzZGJhNTQyIiwidCI6IjEyMDFlNjcwLTI4YjQtNDg1ZC05OTNhLWIxYzU0OGRhMmZhYiJ9"
+          frameborder="0" allowFullScreen="true">
+        </iframe>
+      </div>
+
+      <footer class="mt-3 flex flex-wrap gap-2 text-xs text-zinc-400">
+        <span class="px-2 py-1 rounded-full border border-white/10">DAX</span>
+        <span class="px-2 py-1 rounded-full border border-white/10">HTML/SVG</span>
+        <span class="px-2 py-1 rounded-full border border-white/10">UX para BI</span>
+      </footer>
     </article>
+
+    <!-- Tus otras cards (las dejo igual, solo estética NightWolf) -->
+    <div class="grid md:grid-cols-2 gap-6 mt-6">
+      <article class="card rounded-2xl border border-white/10 bg-zinc-900/60 p-5">
+        <h4 class="font-semibold">🚦 Velocímetro SLA</h4>
+        <p class="text-sm text-zinc-300 mt-1">Gauge personalizado con estados por desfase y % on-time.</p>
+        <img src="assets/img/sla_gauge.png" class="mt-3 rounded-lg border border-white/10" alt="SLA Gauge" />
+      </article>
+      <article class="card rounded-2xl border border-white/10 bg-zinc-900/60 p-5">
+        <h4 class="font-semibold">🧩 UI Components para BI</h4>
+        <p class="text-sm text-zinc-300 mt-1">Header, ticker, progress bar y cebra reutilizables.</p>
+        <img src="assets/img/ui_bi.png" class="mt-3 rounded-lg border border-white/10" alt="UI BI" />
+      </article>
+    </div>
+
+    <div class="mt-6 text-right">
+      <a href="dashboards.html" class="text-sm text-emerald-400 hover:underline">Ver todos los dashboards →</a>
+    </div>
   </section>
 
-  <!-- FOOTER -->
-  <footer class="mt-20 text-center text-gray-500 py-8 text-sm">
-    © 2025 NightWolf | Construido con <span class="text-emerald-400">💻 + ☕</span>
-  </footer>
+  <!-- ===== MODELOS (ML) ===== -->
+  <section id="modelos" class="max-w-6xl mx-auto px-4 py-12 sm:py-16">
+    <h2 class="text-2xl sm:text-3xl font-bold">Modelos</h2>
+    <div class="grid md:grid-cols-2 gap-6 mt-6">
+      <article class="card rounded-2xl border border-white/10 bg-zinc-900/60 p-5">
+        <h4 class="font-semibold">📈 Regresión de Beneficios</h4>
+        <p class="text-sm text-zinc-300 mt-1">Regresión lineal desde cero (NumPy) para predecir <em>insurance_benefits</em>. Métricas: RMSE y R².</p>
+        <img src="assets/img/regresion.png" class="mt-3 rounded-lg border border-white/10" alt="Regresión" />
+      </article>
+      <article class="card rounded-2xl border border-white/10 bg-zinc-900/60 p-5">
+        <h4 class="font-semibold">🧠 Clasificación simple</h4>
+        <p class="text-sm text-zinc-300 mt-1">Baseline con métricas, feature scaling y comparación.</p>
+        <img src="assets/img/clasificacion.png" class="mt-3 rounded-lg border border-white/10" alt="Clasificación" />
+      </article>
+    </div>
+    <div class="mt-6 text-right">
+      <a href="models.html" class="text-sm text-emerald-400 hover:underline">Ver más modelos →</a>
+    </div>
+  </section>
 
+  <!-- ===== PROYECTO CHINGÓN (RAG + Jarvis) ===== -->
+  <section id="proyecto-estrella" class="max-w-6xl mx-auto px-4 py-12 sm:py-16">
+    <div class="rounded-2xl border border-emerald-500/40 p-6 bg-gradient-to-tr from-emerald-500/10 to-transparent">
+      <h2 class="text-2xl sm:text-3xl font-extrabold nw-glow">Proyecto Chingón · RAG + Jarvis</h2>
+      <p class="text-zinc-300 mt-2 max-w-prose">
+        Orquestación de un sistema RAG (retrieval-augmented generation) para responder preguntas de negocio usando documentos internos;
+        capa de herramientas ("Jarvis") para ejecutar cálculos y devolver respuestas accionables. Demo y write-up próximamente.
+      </p>
+      <div class="mt-4 flex flex-wrap gap-2 text-xs text-zinc-400">
+        <span class="px-2 py-1 rounded-full border border-white/10">Embeddings</span>
+        <span class="px-2 py-1 rounded-full border border-white/10">Vector DB</span>
+        <span class="px-2 py-1 rounded-full border border-white/10">Tool Use</span>
+        <span class="px-2 py-1 rounded-full border border-white/10">Eval</span>
+      </div>
+      <div class="mt-6">
+        <a href="rag-jarvis.html" class="shine inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500">Ver caso completo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACTO ===== -->
+  <section id="contacto" class="max-w-6xl mx-auto px-4 py-16">
+    <div class="rounded-2xl border border-white/10 p-6 bg-zinc-900/60">
+      <h2 class="text-2xl sm:text-3xl font-bold">Contacto</h2>
+      <p class="text-zinc-300 mt-2">¿Tienes un reto de BI / IA? Escríbeme:</p>
+      <div class="mt-4 flex flex-wrap gap-3 text-sm">
+        <a class="px-3 py-2 rounded-lg border border-white/15 hover:border-emerald-400/60" href="mailto:tuemail@dominio.com">tuemail@dominio.com</a>
+        <a class="px-3 py-2 rounded-lg border border-white/15 hover:border-emerald-400/60" href="https://www.linkedin.com/in/tuusuario" target="_blank" rel="noreferrer">LinkedIn</a>
+        <a class="px-3 py-2 rounded-lg border border-white/15 hover:border-emerald-400/60" href="https://github.com/BlackEddit" target="_blank" rel="noreferrer">GitHub</a>
+      </div>
+    </div>
+    <footer class="text-xs text-zinc-500 text-center mt-8">© <span id="y"></span> NightWolf · Hecho con GitHub Pages</footer>
+  </section>
+
+  <!-- ===== PLAYER SPOTIFY (FIJO ABAJO) =====
+       Nota: el volumen lo controla el usuario; el embed no permite bajarlo por código.
+       Dejamos un toggle para ocultar/mostrar el player si estorba. -->
+  <div id="playerWrap" class="fixed bottom-0 inset-x-0 border-t border-white/10 bg-zinc-900/80 backdrop-blur z-50 transition-all">
+    <div class="max-w-6xl mx-auto px-4 py-2">
+      <iframe
+        style="border-radius:12px"
+        src="https://open.spotify.com/embed/playlist/2Do8x2DPWjmDCQV77iZnut?utm_source=generator&theme=0"
+        width="100%" height="80" frameBorder="0"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+      </iframe>
+    </div>
+  </div>
+
+  <!-- Botón flotante para ocultar/mostrar el player -->
+  <button id="toggleBtn"
+    class="player-toggle px-3 py-1.5 text-xs rounded-full border border-white/15 hover:border-emerald-400/60 bg-zinc-900/80 backdrop-blur">
+    Ocultar música ⤵
+  </button>
+
+  <script>
+    // Año dinámico
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Toggle para ocultar/mostrar el player (no cambia volumen, solo visibilidad)
+    const btn = document.getElementById('toggleBtn');
+    const wrap = document.getElementById('playerWrap');
+    let hidden = false;
+    btn.addEventListener('click', () => {
+      hidden = !hidden;
+      if (hidden) {
+        wrap.style.transform = 'translateY(100%)';
+        btn.textContent = 'Mostrar música ⤴';
+      } else {
+        wrap.style.transform = 'translateY(0)';
+        btn.textContent = 'Ocultar música ⤵';
+      }
+    });
+  </script>
 </body>
 </html>
