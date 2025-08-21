@@ -100,6 +100,7 @@
       <nav class="hidden sm:flex gap-6 text-sm">
         <a href="#dashboards" class="hover:text-emerald-400">Dashboards</a>
         <a href="#modelos" class="hover:text-emerald-400">Modelos</a>
+        <a href="#mnist" class="hover:text-emerald-400">Demo IA</a>
         <a href="#proyecto-estrella" class="hover:text-emerald-400">Proyecto Chingón</a>
         <a href="#contacto" class="hover:text-emerald-400">Contacto</a>
       </nav>
@@ -232,6 +233,54 @@
     </div>
   </section>
 
+  <!-- DEMO: RECONOCEDOR DE DÍGITOS (TF.js) -->
+  <section id="mnist" class="max-w-6xl mx-auto px-4 py-12 sm:py-16">
+    <h2 class="text-2xl sm:text-3xl font-bold">Demo: Reconocedor de Dígitos (0–9)</h2>
+    <p class="text-zinc-300 mt-2">Dibuja un número y el modelo lo adivina. Corre 100% en tu navegador con TensorFlow.js.</p>
+
+    <div class="card mt-4 rounded-2xl border border-white/10 bg-zinc-900/60 p-5">
+      <div class="grid md:grid-cols-[320px_1fr] gap-6 items-start">
+        <!-- Lienzo para dibujar -->
+        <div class="space-y-3">
+          <div class="rounded-xl border border-white/10 overflow-hidden bg-black">
+            <canvas id="drawpad" width="280" height="280" class="block"></canvas>
+          </div>
+          <div class="flex gap-2">
+            <button id="mnistClear" class="px-3 py-2 rounded-lg border border-white/15 hover:border-emerald-400/60">
+              Limpiar
+            </button>
+            <button id="mnistPredict" class="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white">
+              Predecir
+            </button>
+          </div>
+
+          <div class="text-xs text-zinc-400">
+            Consejo: escribe grande y centrado. Trazo blanco sobre fondo negro (como MNIST).
+          </div>
+        </div>
+
+        <!-- Resultados -->
+        <div class="space-y-4">
+          <div class="grid grid-cols-[64px_1fr] gap-4 items-center">
+            <div class="rounded-lg border border-white/10 bg-black p-2">
+              <canvas id="mnistPreview" width="56" height="56" class="block mx-auto"></canvas>
+              <div class="text-[10px] text-center text-zinc-400 mt-1">28×28</div>
+            </div>
+            <div>
+              <div class="text-sm text-zinc-300">Top predicciones</div>
+              <div id="mnistTop" class="mt-2 space-y-1 text-sm"></div>
+            </div>
+          </div>
+
+          <div class="rounded-xl border border-white/10 overflow-hidden">
+            <div class="bg-zinc-800/50 px-3 py-2 text-xs text-zinc-300">Distribución completa (0–9)</div>
+            <div id="mnistBars" class="p-3 grid grid-cols-1 gap-1 text-xs"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- CHINGÓN -->
   <section id="proyecto-estrella" class="max-w-6xl mx-auto px-4 py-12 sm:py-16">
     <div class="rounded-2xl border border-emerald-500/40 p-6 bg-gradient-to-tr from-emerald-500/10 to-transparent">
@@ -276,6 +325,9 @@
     class="player-toggle px-3 py-1.5 text-xs rounded-full border border-white/15 hover:border-emerald-400/60 bg-zinc-900/80 backdrop-blur">
     Ocultar música ⤵
   </button>
+
+  <!-- TensorFlow.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.16.0/dist/tf.min.js"></script>
 
   <script>
     // Año dinámico
@@ -403,6 +455,155 @@
     //     setDash(cur);
     //   }, 12000);
     // }
+
+    // ===== DEMO MNIST: Reconocedor de dígitos =====
+    (async function mnistDemo(){
+      // Modelo pre-entrenado (CNN MNIST en TF.js)
+      const MODEL_URL = "https://storage.googleapis.com/tfjs-models/tfjs/mnist/model.json";
+
+      const canvas = document.getElementById('drawpad');
+      const ctx = canvas.getContext('2d');
+      const btnClear = document.getElementById('mnistClear');
+      const btnPredict = document.getElementById('mnistPredict');
+      const prevCanvas = document.getElementById('mnistPreview');
+      const prevCtx = prevCanvas.getContext('2d');
+      const topBox = document.getElementById('mnistTop');
+      const barsBox = document.getElementById('mnistBars');
+
+      // Configurar lienzo: fondo negro, trazo blanco grueso
+      function resetCanvas(){
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+      }
+      resetCanvas();
+      ctx.lineWidth = 22;
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = '#fff';
+
+      // Dibujo con mouse/touch
+      let drawing = false, last = null;
+      function getPos(e){
+        if(e.touches && e.touches[0]){
+          const r = canvas.getBoundingClientRect();
+          return { x: e.touches[0].clientX - r.left, y: e.touches[0].clientY - r.top };
+        }else{
+          return { x: e.offsetX, y: e.offsetY };
+        }
+      }
+      function line(a,b){
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.stroke();
+      }
+      function start(e){ drawing = true; last = getPos(e); }
+      function move(e){
+        if(!drawing) return;
+        const p = getPos(e);
+        line(last, p);
+        last = p;
+        e.preventDefault();
+      }
+      function end(){ drawing = false; last = null; }
+
+      canvas.addEventListener('mousedown', start);
+      canvas.addEventListener('mousemove', move);
+      window.addEventListener('mouseup', end);
+      canvas.addEventListener('touchstart', start, {passive:false});
+      canvas.addEventListener('touchmove', move, {passive:false});
+      canvas.addEventListener('touchend', end);
+
+      btnClear.addEventListener('click', () => {
+        resetCanvas();
+        topBox.innerHTML = '';
+        barsBox.innerHTML = '';
+        prevCtx.clearRect(0,0,prevCanvas.width,prevCanvas.height);
+      });
+
+      // Cargar modelo (lazy: al primer uso)
+      let model = null;
+      async function getModel(){
+        if(!model){
+          topBox.textContent = "Cargando modelo…";
+          model = await tf.loadLayersModel(MODEL_URL);
+        }
+        return model;
+      }
+
+      // Preprocesar a 28x28 (blanco->1, negro->0), normalizar [0,1]
+      function preprocess(){
+        // 1) copiar a un offscreen 28x28
+        const off = document.createElement('canvas');
+        off.width = 28; off.height = 28;
+        const octx = off.getContext('2d');
+
+        // Recortar el trazo (bounding box) para centrar mejor
+        // (opcional simple: escalamos todo el 280x280 a 28x28)
+        octx.drawImage(canvas, 0, 0, 28, 28);
+
+        // Vista previa ampliada (56x56)
+        prevCtx.imageSmoothingEnabled = false;
+        prevCtx.fillStyle = '#000';
+        prevCtx.fillRect(0,0,56,56);
+        prevCtx.drawImage(off, 0, 0, 56, 56);
+
+        // 2) leer píxeles y convertir a tensor [1,28,28,1]
+        const img = octx.getImageData(0,0,28,28);
+        const { data } = img;
+        const arr = new Float32Array(28*28);
+        for(let i=0, j=0; i<data.length; i+=4, j++){
+          // data[i] = R, [i+1]=G, [i+2]=B, [i+3]=A
+          // imagen es blanco sobre negro: tomamos R (o promedio)
+          const v = data[i] / 255; // 0..1
+          arr[j] = v;              // ya es blanco=1, negro=0
+        }
+        const x = tf.tensor4d(arr, [1,28,28,1]);
+        return x;
+      }
+
+      function renderBars(probs){
+        barsBox.innerHTML = '';
+        probs.forEach((p, digit) => {
+          const pct = (p*100).toFixed(1);
+          const bar = document.createElement('div');
+          bar.innerHTML = `
+            <div class="flex items-center gap-2">
+              <div class="w-5 text-right">${digit}</div>
+              <div class="flex-1 h-3 bg-zinc-800 rounded">
+                <div class="h-3 rounded bg-emerald-500" style="width:${pct}%"></div>
+              </div>
+              <div class="w-14 text-right tabular-nums">${pct}%</div>
+            </div>`;
+          barsBox.appendChild(bar);
+        });
+      }
+
+      function renderTop(probs){
+        const entries = probs.map((p,i)=>({digit:i,p})).sort((a,b)=>b.p-a.p).slice(0,3);
+        topBox.innerHTML = entries.map(e =>
+          `<div class="flex items-center justify-between border border-white/10 rounded px-2 py-1">
+             <div class="font-semibold text-lg">${e.digit}</div>
+             <div class="text-emerald-400 font-medium">${(e.p*100).toFixed(1)}%</div>
+           </div>`).join('');
+      }
+
+      btnPredict.addEventListener('click', async () => {
+        try{
+          const m = await getModel();
+          const x = preprocess();     // [1,28,28,1]
+          const y = m.predict(x);     // [1,10]
+          const probs = (await y.data()); // Float32Array length 10
+          x.dispose(); y.dispose();
+
+          renderTop(Array.from(probs));
+          renderBars(Array.from(probs));
+        }catch(err){
+          console.error(err);
+          topBox.textContent = "Error al predecir 😿";
+        }
+      });
+    })();
   </script>
 </body>
 </html>
