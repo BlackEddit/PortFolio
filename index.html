@@ -326,8 +326,8 @@
     Ocultar música ⤵
   </button>
 
-  <!-- TensorFlow.js -->
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.16.0/dist/tf.min.js"></script>
+  <!-- TensorFlow.js (versión estable para el modelo MNIST hosteado) -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
 
   <script>
     // Año dinámico
@@ -456,11 +456,17 @@
     //   }, 12000);
     // }
 
-    // ===== DEMO MNIST: Reconocedor de dígitos =====
+    // ===== DEMO MNIST: Reconocedor de dígitos (fix URLs + fallback) =====
     (async function mnistDemo(){
-      // Modelo pre-entrenado (CNN MNIST en TF.js)
-      const MODEL_URL = "https://storage.googleapis.com/tfjs-models/tfjs/mnist/model.json";
+      // 🔁 Lista de modelos válidos (probamos en orden)
+      const MODEL_URLS = [
+        // Modelo oficial "transfer" hospedado por TensorFlow.js
+        "https://storage.googleapis.com/tfjs-models/tfjs/mnist_transfer_cnn_v1/model.json",
+        // Modelo comunitario (convnet) hospedado en GitHub Pages
+        "https://hpssjellis.github.io/beginner-tensorflowjs-examples-in-javascript/saved-models/mnist/convnet/my-mnist01.json"
+      ];
 
+      // ---- (el resto de tu código de canvas se queda igual) ----
       const canvas = document.getElementById('drawpad');
       const ctx = canvas.getContext('2d');
       const btnClear = document.getElementById('mnistClear');
@@ -470,42 +476,16 @@
       const topBox = document.getElementById('mnistTop');
       const barsBox = document.getElementById('mnistBars');
 
-      // Configurar lienzo: fondo negro, trazo blanco grueso
-      function resetCanvas(){
-        ctx.fillStyle = '#000';
-        ctx.fillRect(0,0,canvas.width,canvas.height);
-      }
+      function resetCanvas(){ ctx.fillStyle='#000'; ctx.fillRect(0,0,canvas.width,canvas.height); }
       resetCanvas();
-      ctx.lineWidth = 22;
-      ctx.lineJoin = 'round';
-      ctx.lineCap = 'round';
-      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 26; ctx.lineJoin='round'; ctx.lineCap='round'; ctx.strokeStyle='#fff';
 
-      // Dibujo con mouse/touch
-      let drawing = false, last = null;
-      function getPos(e){
-        if(e.touches && e.touches[0]){
-          const r = canvas.getBoundingClientRect();
-          return { x: e.touches[0].clientX - r.left, y: e.touches[0].clientY - r.top };
-        }else{
-          return { x: e.offsetX, y: e.offsetY };
-        }
-      }
-      function line(a,b){
-        ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
-        ctx.stroke();
-      }
-      function start(e){ drawing = true; last = getPos(e); }
-      function move(e){
-        if(!drawing) return;
-        const p = getPos(e);
-        line(last, p);
-        last = p;
-        e.preventDefault();
-      }
-      function end(){ drawing = false; last = null; }
+      let drawing=false,last=null;
+      function getPos(e){ if(e.touches?.[0]){ const r=canvas.getBoundingClientRect(); return {x:e.touches[0].clientX-r.left,y:e.touches[0].clientY-r.top}; } return {x:e.offsetX,y:e.offsetY}; }
+      function line(a,b){ ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); }
+      function start(e){ drawing=true; last=getPos(e); }
+      function move(e){ if(!drawing) return; const p=getPos(e); line(last,p); last=p; e.preventDefault(); }
+      function end(){ drawing=false; last=null; }
 
       canvas.addEventListener('mousedown', start);
       canvas.addEventListener('mousemove', move);
@@ -515,92 +495,91 @@
       canvas.addEventListener('touchend', end);
 
       btnClear.addEventListener('click', () => {
-        resetCanvas();
-        topBox.innerHTML = '';
-        barsBox.innerHTML = '';
-        prevCtx.clearRect(0,0,prevCanvas.width,prevCanvas.height);
+        resetCanvas(); topBox.innerHTML=''; barsBox.innerHTML=''; prevCtx.clearRect(0,0,prevCanvas.width,prevCanvas.height);
       });
 
-      // Cargar modelo (lazy: al primer uso)
-      let model = null;
+      // ==== Cargar modelo con fallback ====
+      let model=null, lastTried=[];
       async function getModel(){
-        if(!model){
-          topBox.textContent = "Cargando modelo…";
-          model = await tf.loadLayersModel(MODEL_URL);
+        if(model) return model;
+        topBox.textContent = "Cargando modelo…";
+        let lastErr = null;
+        for(const url of MODEL_URLS){
+          try{
+            lastTried.push(url);
+            model = await tf.loadLayersModel(url);
+            topBox.textContent = "Modelo listo ✅";
+            return model;
+          }catch(err){
+            lastErr = err;
+            console.warn("Falló modelo:", url, err);
+          }
         }
-        return model;
+        // Si ninguno cargó:
+        const msg = (lastErr?.message || String(lastErr || "Error desconocido"));
+        topBox.innerHTML = `
+          <span class="text-red-300">No se pudo cargar el modelo.</span><br/>
+          Últimos intentos:<br/><code class="text-xs">${lastTried.join("<br/>")}</code><br/>
+          <span class="text-xs text-zinc-400">Tip: recarga con Ctrl+Shift+R para limpiar caché.</span>`;
+        throw lastErr;
       }
 
-      // Preprocesar a 28x28 (blanco->1, negro->0), normalizar [0,1]
+      // ==== Preprocesado 28x28 ====
       function preprocess(){
-        // 1) copiar a un offscreen 28x28
-        const off = document.createElement('canvas');
-        off.width = 28; off.height = 28;
+        const off = document.createElement('canvas'); off.width=28; off.height=28;
         const octx = off.getContext('2d');
-
-        // Recortar el trazo (bounding box) para centrar mejor
-        // (opcional simple: escalamos todo el 280x280 a 28x28)
         octx.drawImage(canvas, 0, 0, 28, 28);
 
-        // Vista previa ampliada (56x56)
+        // Preview 56x56
         prevCtx.imageSmoothingEnabled = false;
-        prevCtx.fillStyle = '#000';
-        prevCtx.fillRect(0,0,56,56);
+        prevCtx.fillStyle='#000'; prevCtx.fillRect(0,0,56,56);
         prevCtx.drawImage(off, 0, 0, 56, 56);
 
-        // 2) leer píxeles y convertir a tensor [1,28,28,1]
-        const img = octx.getImageData(0,0,28,28);
-        const { data } = img;
+        const img = octx.getImageData(0,0,28,28).data;
         const arr = new Float32Array(28*28);
-        for(let i=0, j=0; i<data.length; i+=4, j++){
-          // data[i] = R, [i+1]=G, [i+2]=B, [i+3]=A
-          // imagen es blanco sobre negro: tomamos R (o promedio)
-          const v = data[i] / 255; // 0..1
-          arr[j] = v;              // ya es blanco=1, negro=0
+        for(let i=0,j=0;i<img.length;i+=4,j++){
+          const v = img[i] / 255;     // blanco=1, negro=0
+          arr[j] = v;                 // si un modelo pidiera invertido: usa (1 - v)
         }
-        const x = tf.tensor4d(arr, [1,28,28,1]);
-        return x;
+        return tf.tensor4d(arr, [1,28,28,1]);
       }
 
       function renderBars(probs){
-        barsBox.innerHTML = '';
-        probs.forEach((p, digit) => {
-          const pct = (p*100).toFixed(1);
-          const bar = document.createElement('div');
-          bar.innerHTML = `
+        barsBox.innerHTML=''; probs.forEach((p,d)=>{ const pct=(p*100).toFixed(1);
+          const el=document.createElement('div');
+          el.innerHTML = `
             <div class="flex items-center gap-2">
-              <div class="w-5 text-right">${digit}</div>
+              <div class="w-5 text-right">${d}</div>
               <div class="flex-1 h-3 bg-zinc-800 rounded">
                 <div class="h-3 rounded bg-emerald-500" style="width:${pct}%"></div>
               </div>
               <div class="w-14 text-right tabular-nums">${pct}%</div>
             </div>`;
-          barsBox.appendChild(bar);
+          barsBox.appendChild(el);
         });
       }
-
       function renderTop(probs){
-        const entries = probs.map((p,i)=>({digit:i,p})).sort((a,b)=>b.p-a.p).slice(0,3);
-        topBox.innerHTML = entries.map(e =>
-          `<div class="flex items-center justify-between border border-white/10 rounded px-2 py-1">
-             <div class="font-semibold text-lg">${e.digit}</div>
-             <div class="text-emerald-400 font-medium">${(e.p*100).toFixed(1)}%</div>
-           </div>`).join('');
+        const top = probs.map((p,i)=>({p,i})).sort((a,b)=>b.p-a.p).slice(0,3);
+        topBox.innerHTML = top.map(t=>`
+          <div class="flex items-center justify-between border border-white/10 rounded px-2 py-1">
+            <div class="font-semibold text-lg">${t.i}</div>
+            <div class="text-emerald-400 font-medium">${(t.p*100).toFixed(1)}%</div>
+          </div>`).join('');
       }
 
       btnPredict.addEventListener('click', async () => {
         try{
           const m = await getModel();
-          const x = preprocess();     // [1,28,28,1]
-          const y = m.predict(x);     // [1,10]
-          const probs = (await y.data()); // Float32Array length 10
+          const x = preprocess();        // [1,28,28,1]
+          const y = m.predict(x);        // [1,10]
+          const probs = Array.from(await y.data());
           x.dispose(); y.dispose();
-
-          renderTop(Array.from(probs));
-          renderBars(Array.from(probs));
+          renderTop(probs);
+          renderBars(probs);
         }catch(err){
-          console.error(err);
-          topBox.textContent = "Error al predecir 😿";
+          console.error("MNIST predict error:", err);
+          const msg = err?.message ? err.message : String(err);
+          topBox.textContent = "Error al predecir: " + msg;
         }
       });
     })();
