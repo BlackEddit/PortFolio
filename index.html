@@ -153,6 +153,105 @@
 
     /* Loading spinner keyframes */
     @keyframes spin{ to{ transform: rotate(360deg) } }
+
+    /* ===== DARK/LIGHT MODE TOGGLE ===== */
+    :root {
+      --bg-primary: 24 24 27; /* zinc-950 */
+      --bg-secondary: 39 39 42; /* zinc-800 */
+      --bg-card: 39 39 42; /* zinc-800 */
+      --text-primary: 244 244 245; /* zinc-100 */
+      --text-secondary: 161 161 170; /* zinc-400 */
+      --border: 255 255 255;
+      --border-opacity: 0.1;
+      --emerald: 16 185 129;
+    }
+
+    [data-theme="light"] {
+      --bg-primary: 255 255 255; /* white */
+      --bg-secondary: 248 250 252; /* slate-50 */
+      --bg-card: 248 250 252; /* slate-50 */
+      --text-primary: 15 23 42; /* slate-900 */
+      --text-secondary: 100 116 139; /* slate-500 */
+      --border: 0 0 0;
+      --border-opacity: 0.15;
+      --emerald: 5 150 105; /* emerald-600 */
+    }
+
+    /* Theme transition */
+    *, *::before, *::after {
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease !important;
+    }
+
+    /* Override default classes with CSS variables */
+    .bg-zinc-950 { background-color: rgb(var(--bg-primary)) !important; }
+    .bg-zinc-900 { background-color: rgb(var(--bg-secondary)) !important; }
+    .bg-zinc-800 { background-color: rgb(var(--bg-card)) !important; }
+    .text-zinc-100 { color: rgb(var(--text-primary)) !important; }
+    .text-zinc-300 { color: rgb(var(--text-secondary)) !important; }
+    .text-zinc-400 { color: rgb(var(--text-secondary)) !important; }
+    .text-zinc-500 { color: rgb(var(--text-secondary)) !important; }
+    .border-white\/10 { border-color: rgba(var(--border), var(--border-opacity)) !important; }
+    .border-white\/15 { border-color: rgba(var(--border), calc(var(--border-opacity) + 0.05)) !important; }
+
+    /* Theme toggle button */
+    .theme-toggle {
+      position: fixed;
+      top: 50%;
+      right: 1rem;
+      transform: translateY(-50%);
+      z-index: 70;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(var(--bg-card), 0.8);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(var(--border), var(--border-opacity));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .theme-toggle:hover {
+      transform: translateY(-50%) scale(1.05);
+      box-shadow: 0 8px 25px rgba(var(--emerald), 0.25);
+    }
+
+    .theme-icon {
+      font-size: 20px;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Sun/Moon animations */
+    .theme-icon.rotate-in {
+      transform: rotate(0deg) scale(1);
+      opacity: 1;
+    }
+
+    .theme-icon.rotate-out {
+      transform: rotate(90deg) scale(0);
+      opacity: 0;
+    }
+
+    /* Light theme adjustments */
+    [data-theme="light"] .nw-bg {
+      background:
+        radial-gradient(1000px 800px at 80% -10%, rgba(var(--emerald), 0.08), transparent 60%),
+        radial-gradient(900px 700px at -10% 120%, rgba(var(--emerald), 0.06), transparent 60%),
+        repeating-linear-gradient(to right, rgba(var(--emerald), 0.03) 0 1px, transparent 1px 80px),
+        repeating-linear-gradient(to bottom, rgba(var(--emerald), 0.02) 0 1px, transparent 1px 80px);
+    }
+
+    [data-theme="light"] .nw-glow {
+      text-shadow: 0 0 10px rgba(var(--emerald), 0.6), 0 0 20px rgba(var(--emerald), 0.4), 0 0 40px rgba(var(--emerald), 0.3);
+    }
+
+    /* Particles theme adjustment */
+    [data-theme="light"] #tsparticles {
+      opacity: 0.6;
+    }
   </style>
 </head>
 
@@ -429,12 +528,86 @@
     Ocultar música ⤵
   </button>
 
+  <!-- Theme Toggle -->
+  <button id="themeToggle" class="theme-toggle" aria-label="Cambiar tema">
+    <span class="theme-icon" id="themeIcon">🌙</span>
+  </button>
+
   <!-- TensorFlow.js (versión estable para el modelo MNIST hosteado) -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
 
   <script>
     // Año dinámico
     document.getElementById('y').textContent = new Date().getFullYear();
+
+    // ===== THEME TOGGLE =====
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const body = document.body;
+    
+    // Check for saved theme or default to dark
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    
+    function setTheme(theme) {
+      if (theme === 'light') {
+        body.setAttribute('data-theme', 'light');
+        themeIcon.textContent = '☀️';
+        localStorage.setItem('theme', 'light');
+        
+        // Update particles color for light mode
+        if (window.tsParticles) {
+          const container = tsParticles.domItem(0);
+          if (container) {
+            container.options.particles.links.color = '#059669'; // emerald-600
+            container.refresh();
+          }
+        }
+      } else {
+        body.removeAttribute('data-theme');
+        themeIcon.textContent = '🌙';
+        localStorage.setItem('theme', 'dark');
+        
+        // Reset particles color for dark mode
+        if (window.tsParticles) {
+          const container = tsParticles.domItem(0);
+          if (container) {
+            container.options.particles.links.color = '#10b981'; // emerald-500
+            container.refresh();
+          }
+        }
+      }
+    }
+    
+    function toggleTheme() {
+      const currentTheme = body.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      
+      // Animate icon change
+      themeIcon.classList.add('rotate-out');
+      
+      setTimeout(() => {
+        setTheme(newTheme);
+        themeIcon.classList.remove('rotate-out');
+        themeIcon.classList.add('rotate-in');
+        
+        setTimeout(() => {
+          themeIcon.classList.remove('rotate-in');
+        }, 500);
+      }, 250);
+    }
+    
+    // Set initial theme
+    setTheme(currentTheme);
+    
+    // Theme toggle event
+    themeToggle.addEventListener('click', toggleTheme);
+    
+    // Keyboard shortcut: Ctrl+Shift+T
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'T') {
+        toggleTheme();
+      }
+    });
 
     // ===== MOBILE MENU =====
     const hamburger = document.getElementById('hamburger');
@@ -493,31 +666,51 @@
 
     // ===== tsParticles: detrás y reaccionando al mouse =====
     const COLORS = ["#10b981","#7b2eff","#ff005d"];
-    tsParticles.load("tsparticles", {
-      fullScreen: { enable: false },     // usamos nuestro contenedor fijo
-      detectRetina: true,
-      particles: {
-        number: { value: 80, density: { enable: true, area: 900 } },
-        color: { value: COLORS },
-        shape: { type: "circle" },
-        opacity: { value: 0.7, random: { enable: true, minimumValue: 0.3 } },
-        size: { value: { min:1, max:3 } },
-        links: { enable: true, distance: 130, color: "#10b981", opacity: .35, width: 1 },
-        move: { enable: true, speed: 1.2, outModes: { default: "out" } }
-      },
-      interactivity: {
-        detectsOn: "window",             // <- capta el mouse aunque el canvas tenga pointer-events:none
-        events: {
-          onHover: { enable: true, mode: "repulse" },   // responde al movimiento
-          onClick: { enable: true, mode: "push" },      // opcional: clic agrega partículas
-          resize: true
+    const COLORS_LIGHT = ["#059669","#6d28d9","#dc2626"];
+    
+    function initParticles() {
+      const isLight = body.getAttribute('data-theme') === 'light';
+      const colors = isLight ? COLORS_LIGHT : COLORS;
+      const linkColor = isLight ? '#059669' : '#10b981';
+      
+      tsParticles.load("tsparticles", {
+        fullScreen: { enable: false },
+        detectRetina: true,
+        particles: {
+          number: { value: 80, density: { enable: true, area: 900 } },
+          color: { value: colors },
+          shape: { type: "circle" },
+          opacity: { 
+            value: isLight ? 0.5 : 0.7, 
+            random: { enable: true, minimumValue: isLight ? 0.2 : 0.3 } 
+          },
+          size: { value: { min:1, max:3 } },
+          links: { 
+            enable: true, 
+            distance: 130, 
+            color: linkColor, 
+            opacity: isLight ? 0.25 : 0.35, 
+            width: 1 
+          },
+          move: { enable: true, speed: 1.2, outModes: { default: "out" } }
         },
-        modes: {
-          repulse: { distance: 120, duration: .4 },
-          push: { quantity: 4 }
+        interactivity: {
+          detectsOn: "window",
+          events: {
+            onHover: { enable: true, mode: "repulse" },
+            onClick: { enable: true, mode: "push" },
+            resize: true
+          },
+          modes: {
+            repulse: { distance: 120, duration: .4 },
+            push: { quantity: 4 }
+          }
         }
-      }
-    });
+      });
+    }
+    
+    // Initialize particles after theme is set
+    setTimeout(initParticles, 100);
 
     // ===== Explosión de confeti desde el avatar =====
     const avatar = document.getElementById('avatarWrap');
@@ -526,10 +719,13 @@
       const cx = rect.left + rect.width/2;
       const cy = rect.top + rect.height/2;
       const N = 42;
+      const isLight = body.getAttribute('data-theme') === 'light';
+      const colors = isLight ? COLORS_LIGHT : COLORS;
+      
       for(let i=0;i<N;i++){
         const d = document.createElement('div');
         d.className = 'confetti';
-        const c = COLORS[i % COLORS.length];
+        const c = colors[i % colors.length];
         d.style.background = c;
         d.style.boxShadow = `0 0 10px ${c}`;
         const angle = Math.random()*360;
