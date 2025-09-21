@@ -1,0 +1,16 @@
+d:\Proyectos\Portafolio\
+├── index.html          ← Página principal (HTML)
+├── cv.pdf              ← Archivos estáticos
+├── assets/             ← TODOS los recursos del sitio
+│   ├── css/            ← Estilos (cómo se ve)
+│   │   └── styles.css
+│   ├── js/             ← Funcionalidad (qué hace)
+│   │   ├── portfolio.js
+│   │   └── mnist.js
+│   ├── img/            ← Imágenes (fotos, iconos)
+│   │   ├── imagen personal.jpg
+│   │   └── sla_gauge.png
+│   └── lang/           ← Traducciones (nueva carpeta)
+│       ├── es.json
+│       ├── en.json
+│       └── i18n.js

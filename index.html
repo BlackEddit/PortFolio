@@ -3,31 +3,42 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>NightWolf · Portafolio</title>
-  <meta name="description" content="Edgar 'NightWolf' - Data Scientist & BI Developer. Dashboards Power BI, modelos ML y proyectos de IA aplicada." />
-  
+  <!-- Titulo de pestania -->
+  <title>Edgar's Portafolio</title>
   <!-- Open Graph -->
+  <meta name="description" content="Edgar - Data Scientist & BI Developer. Dashboards Power BI, modelos ML y proyectos de IA aplicada." />
+  
+  <!-- Open Graph
+   Open Graph (redes sociales):
+   ¿Para qué? Cuando alguien comparte tu link en WhatsApp/Facebook/LinkedIn, aparece una tarjeta bonita con:
+  Tu foto
+  Título
+  Descripción
+  -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Edgar NightWolf - Data Scientist & BI Developer">
+  <meta property="og:title" content="Edgar- Data Scientist & BI Developer">
   <meta property="og:description" content="Dashboards Power BI, modelos ML y proyectos de IA aplicada. Construyo experiencias de datos que impulsan decisiones de negocio.">
   <meta property="og:image" content="https://blackeddit.github.io/PortFolio/assets/img/imagen%20personal.jpg">
 
-  <!-- SEO -->
+  <!-- SEO 
+   (para que Google te encuentre)-->
   <meta name="keywords" content="Power BI, Data Science, Machine Learning, TensorFlow.js, Dashboards, DAX, Python, Business Intelligence">
   <meta name="author" content="Edgar NightWolf">
   
-  <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐺</text></svg>">
+  <!-- Favicon (icono de pestaña) 🐦‍⬛ -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐦‍⬛</text></svg>">
 
   <!-- Styles -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/language-selector.css">
   
   <!-- Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
   
-  <!-- Preload -->
+  <!-- Preload  Smart: Le dice al navegador que cargue tu foto antes, para que aparezca más rápido.
+Está bien armado tu <head>, solo le falta más personalidad en los textos.-->
   <link rel="preload" as="image" href="assets/img/imagen%20personal.jpg" />
 </head>
 
@@ -35,7 +46,6 @@
   <!-- Background & Effects -->
   <div class="nw-bg"></div>
   <div id="tsparticles"></div>
-  <canvas id="matrixRain"></canvas>
   <canvas id="matrixRain"></canvas>
 
   <!-- NAV -->
@@ -45,16 +55,16 @@
       
       <!-- Desktop Nav -->
       <nav class="hidden sm:flex gap-6 text-sm">
-        <a href="#about" class="hover:text-emerald-400 transition-colors">Conóceme</a>
-        <a href="#dashboards" class="hover:text-emerald-400 transition-colors">Dashboards</a>
-        <a href="#modelos" class="hover:text-emerald-400 transition-colors">Modelos</a>
-        <a href="#mnist" class="hover:text-emerald-400 transition-colors">Demo IA</a>
-        <a href="#proyecto-estrella" class="hover:text-emerald-400 transition-colors">Proyecto Chingón</a>
-        <a href="#contacto" class="hover:text-emerald-400 transition-colors">Contacto</a>
+        <a href="#about" class="hover:text-emerald-400 transition-colors" data-i18n="nav.about">Conóceme</a>
+        <a href="#dashboards" class="hover:text-emerald-400 transition-colors" data-i18n="nav.dashboards">Dashboards</a>
+        <a href="#modelos" class="hover:text-emerald-400 transition-colors" data-i18n="nav.models">Modelos</a>
+        <a href="#mnist" class="hover:text-emerald-400 transition-colors" data-i18n="nav.demo">Demo IA</a>
+        <a href="#proyecto-estrella" class="hover:text-emerald-400 transition-colors" data-i18n="nav.project">Proyecto Chingón</a>
+        <a href="#contacto" class="hover:text-emerald-400 transition-colors" data-i18n="nav.contact">Contacto</a>
       </nav>
       
       <div class="flex items-center gap-3">
-        <a href="cv.pdf" class="text-sm px-3 py-1.5 rounded-full border border-white/15 hover:border-emerald-500/60 hover:text-emerald-300 transition-colors">CV</a>
+        <a href="cv.pdf" class="text-sm px-3 py-1.5 rounded-full border border-white/15 hover:border-emerald-500/60 hover:text-emerald-300 transition-colors" data-i18n="nav.cv">CV</a>
         
         <!-- Hamburger Button (Mobile) -->
         <button id="hamburger" class="sm:hidden p-2 rounded-lg hover:bg-zinc-800/50 transition-colors" aria-label="Menú">
@@ -70,12 +80,12 @@
     <!-- Mobile Menu -->
     <nav id="mobileMenu" class="sm:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur border-b border-white/10 transform -translate-y-full opacity-0 transition-all duration-300 pointer-events-none">
       <div class="max-w-6xl mx-auto px-4 py-4 space-y-3">
-        <a href="#about" class="block py-2 text-zinc-300 hover:text-emerald-400 transition-colors">🧠 Conóceme</a>
-        <a href="#dashboards" class="block py-2 text-zinc-300 hover:text-emerald-400 transition-colors">📊 Dashboards</a>
-        <a href="#modelos" class="block py-2 text-zinc-300 hover:text-emerald-400 transition-colors">🧠 Modelos</a>
-        <a href="#mnist" class="block py-2 text-zinc-300 hover:text-emerald-400 transition-colors">🎯 Demo IA</a>
-        <a href="#proyecto-estrella" class="block py-2 text-zinc-300 hover:text-emerald-400 transition-colors">⭐ Proyecto Chingón</a>
-        <a href="#contacto" class="block py-2 text-zinc-300 hover:text-emerald-400 transition-colors">📧 Contacto</a>
+        <a href="#about" class="block py-2 text-zinc-300 hover:text-emerald-400 transition-colors" data-i18n="nav.about">🧠 Conóceme</a>
+        <a href="#dashboards" class="block py-2 text-zinc-300 hover:text-emerald-400 transition-colors" data-i18n="nav.dashboards">📊 Dashboards</a>
+        <a href="#modelos" class="block py-2 text-zinc-300 hover:text-emerald-400 transition-colors" data-i18n="nav.models">🧠 Modelos</a>
+        <a href="#mnist" class="block py-2 text-zinc-300 hover:text-emerald-400 transition-colors" data-i18n="nav.demo">🎯 Demo IA</a>
+        <a href="#proyecto-estrella" class="block py-2 text-zinc-300 hover:text-emerald-400 transition-colors" data-i18n="nav.project">⭐ Proyecto Chingón</a>
+        <a href="#contacto" class="block py-2 text-zinc-300 hover:text-emerald-400 transition-colors" data-i18n="nav.contact">📧 Contacto</a>
       </div>
     </nav>
   </header>
@@ -87,8 +97,9 @@
       <!-- Columna izquierda -->
       <div>
         <h1 class="text-4xl sm:text-5xl font-extrabold leading-tight">
-          Edgar Sanchez <span class="text-emerald-400">"llNightyWolfll"</span>
-          <span class="block text-2xl sm:text-3xl mt-2">Data · BI · IA Aplicada</span>
+          <span data-i18n="hero.title">Edgar Sanchez</span><br>
+          <span class="text-emerald-400" data-i18n="hero.nickname">"BI - AI - DATA"</span>
+          <!-- <span class="block text-2xl sm:text-3xl mt-2" data-i18n="hero.subtitle">Data · BI · IA Aplicada</span> -->
         </h1>
         
         <!-- Slogan principal con typing animation -->
@@ -99,12 +110,12 @@
           </p>
         </div>
         
-        <p class="mt-4 text-zinc-300 max-w-prose">
+        <p class="mt-4 text-zinc-300 max-w-prose" data-i18n="hero.description">
           Construyo dashboards y cosas con datos
         </p>
         <div class="mt-6 flex gap-3">
-          <a href="#proyecto-estrella" class="shine inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500">Ver proyecto chingón</a>
-          <a href="#dashboards" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-white/20 hover:border-emerald-400/60">Dashboards</a>
+          <a href="#proyecto-estrella" class="shine inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500" data-i18n="hero.viewProject">Ver proyecto chingón</a>
+          <a href="#dashboards" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-white/20 hover:border-emerald-400/60" data-i18n="hero.dashboards">Dashboards</a>
         </div>
       </div>
 
@@ -125,65 +136,57 @@
     </div>
   </section>
 
-  <!-- CONOCEME (HUMANIDAD) -->
+  <!-- CONOCEME -->
   <section id="about" class="max-w-6xl mx-auto px-4 py-12 sm:py-16">
     <div class="relative z-10">
       <div class="text-center mb-8">
-        <h2 class="text-2xl sm:text-3xl font-bold nw-glow">Un poco de mí</h2>
+        <h2 class="text-2xl sm:text-3xl font-bold nw-glow" data-i18n="about.title">Un poco de mí</h2>
       </div>
-      
-      <!-- Confesión honesta -->
+
+      <!-- other secciones -->
       <div class="max-w-3xl mx-auto">
         <div class="bg-gradient-to-r from-zinc-900/80 to-black/60 rounded-2xl p-8 border border-zinc-700/50">
           <div class="space-y-4 text-zinc-300">
-            <p class="text-lg leading-relaxed">
-              "La verdad no tengo idea de qué poner sin sonar pretencioso"
-            </p>
-            <p class="leading-relaxed text-emerald-300">
-              Aunque... Lo dudes, cometo errores. me equivoco. Aprendo...continiúo
-            </p>
-            <p class="leading-relaxed">
-              </p>
-            <p class="leading-relaxed italic">
-
+            <p class="text-lg leading-relaxed text-center" data-i18n="about.quote1">
+              "Me gustan los retos"
             </p>
           </div>
         </div>
         
-        <!-- Mini facts sobre ti -->
-        <div class="mt-8 grid sm:grid-cols-3 gap-4 text-center">
+        <!-- facts -->
+        <!-- <div class="mt-8 grid sm:grid-cols-3 gap-4 text-center">
           <div class="bg-black/40 rounded-xl p-4 border border-zinc-800">
             <div class="text-2xl mb-2">🎮</div>
-            <div class="text-sm text-zinc-300">"Halo murió en Reach"</div>
+            <div class="text-sm text-zinc-300" data-i18n="about.fact1">"Halo murió en Reach"</div>
           </div>
           <div class="bg-black/40 rounded-xl p-4 border border-zinc-800">
-            <div class="text-2xl mb-2">�</div>
-            <div class="text-sm text-zinc-300">im only human</div>
+            <div class="text-2xl mb-2">😅</div>
+            <div class="text-sm text-zinc-300" data-i18n="about.fact2">im only human</div>
           </div>
           <div class="bg-black/40 rounded-xl p-4 border border-zinc-800">
             <div class="text-2xl mb-2">🤝</div>
-            <div class="text-sm text-zinc-300">mhe!</div>
+            <div class="text-sm text-zinc-300" data-i18n="about.fact3">mhe!</div>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </section> -->
 
   <!-- DASHBOARDS -->
   <section id="dashboards" class="max-w-6xl mx-auto px-4 py-12 sm:py-16">
     <div class="relative z-10">
     <div class="flex items-end justify-between">
-      <h2 class="text-2xl sm:text-3xl font-bold">Dashboards</h2>
-      <a href="#contacto" class="text-sm text-emerald-400 hover:underline">¿Colaboramos?</a>
+      <h2 class="text-2xl sm:text-3xl font-bold" data-i18n="dashboards.title">Dashboards</h2>
+      <a href="#contacto" class="text-sm text-emerald-400 hover:underline" data-i18n="dashboards.collaborate">¿Colaboramos?</a>
     </div>
 
     <article class="card rounded-2xl border border-white/10 bg-zinc-900/60 p-5 mt-6">
       <header class="flex items-center justify-between">
-        <h3 class="text-lg font-semibold">🏆 Dashboards</h3>
+        <h3 class="text-lg font-semibold" data-i18n="dashboards.title">🏆 Dashboards</h3>
         <span class="text-xs text-zinc-400">Power BI</span>
       </header>
 
-      <p class="text-sm text-zinc-300 mt-2">
+      <p class="text-sm text-zinc-300 mt-2" data-i18n="dashboards.switch">
         Cambia entre los dos reportes con el selector.
       </p>
 
@@ -203,7 +206,7 @@
         <div id="dashLoader" class="absolute inset-0 bg-zinc-900/80 backdrop-blur-sm flex items-center justify-center z-10 transition-opacity duration-300">
           <div class="text-center">
             <div class="animate-spin w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full mx-auto mb-2"></div>
-            <p class="text-sm text-emerald-400">Cargando dashboard...</p>
+            <p class="text-sm text-emerald-400" data-i18n="dashboards.loading">Cargando dashboard...</p>
           </div>
         </div>
         
@@ -238,14 +241,14 @@
     </div>
 
     <div class="mt-6 text-right">
-      <a href="dashboards.html" class="text-sm text-emerald-400 hover:underline">Ver todos los dashboards →</a>
+      <a href="dashboards.html" class="text-sm text-emerald-400 hover:underline" data-i18n="dashboards.viewAll">Ver todos los dashboards →</a>
     </div>
     </div>
   </section>
 
   <!-- MODELOS -->
   <section id="modelos" class="max-w-6xl mx-auto px-4 py-12 sm:py-16">
-    <h2 class="text-2xl sm:text-3xl font-bold">Modelos</h2>
+    <h2 class="text-2xl sm:text-3xl font-bold" data-i18n="models.title">Modelos</h2>
     <div class="grid md:grid-cols-2 gap-6 mt-6">
       <article class="card rounded-2xl border border-white/10 bg-zinc-900/60 p-5">
         <h4 class="font-semibold">📈 Regresión de Beneficios</h4>
@@ -259,14 +262,14 @@
       </article>
     </div>
     <div class="mt-6 text-right">
-      <a href="models.html" class="text-sm text-emerald-400 hover:underline">Ver más modelos →</a>
+      <a href="models.html" class="text-sm text-emerald-400 hover:underline" data-i18n="models.viewMore">Ver más modelos →</a>
     </div>
   </section>
 
   <!-- DEMO: RECONOCEDOR DE DÍGITOS (TF.js) -->
   <section id="mnist" class="max-w-6xl mx-auto px-4 py-12 sm:py-16">
-    <h2 class="text-2xl sm:text-3xl font-bold">Demo: Reconocedor de Dígitos (0–9)</h2>
-    <p class="text-zinc-300 mt-2">Dibuja un número y el modelo lo adivina. Corre 100% en tu navegador con TensorFlow.js.</p>
+    <h2 class="text-2xl sm:text-3xl font-bold" data-i18n="mnist.title">Demo: Reconocedor de Dígitos (0–9)</h2>
+    <p class="text-zinc-300 mt-2" data-i18n="mnist.description">Dibuja un número y el modelo lo adivina. Corre 100% en tu navegador con TensorFlow.js.</p>
 
     <div class="card mt-4 rounded-2xl border border-white/10 bg-zinc-900/60 p-5">
       <div class="grid md:grid-cols-[320px_1fr] gap-6 items-start">
@@ -276,16 +279,16 @@
             <canvas id="drawpad" width="280" height="280" class="block"></canvas>
           </div>
           <div class="flex gap-2">
-            <button id="mnistClear" class="px-3 py-2 rounded-lg border border-white/15 hover:border-emerald-400/60 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500/50" aria-label="Limpiar canvas de dibujo">
+            <button id="mnistClear" class="px-3 py-2 rounded-lg border border-white/15 hover:border-emerald-400/60 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500/50" aria-label="Limpiar canvas de dibujo" data-i18n="mnist.clear">
               Limpiar
             </button>
             <button id="mnistPredict" class="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500/50" aria-label="Predecir dígito dibujado">
-              <span id="predictText">Predecir</span>
+              <span id="predictText" data-i18n="mnist.predict">Predecir</span>
               <div id="predictSpinner" class="hidden inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin ml-1"></div>
             </button>
           </div>
 
-          <div class="text-xs text-zinc-400">
+          <div class="text-xs text-zinc-400" data-i18n="mnist.tip">
             Consejo: escribe grande y centrado. Trazo blanco sobre fondo negro (como MNIST).
           </div>
         </div>
@@ -298,7 +301,7 @@
               <div class="text-[10px] text-center text-zinc-400 mt-1">28×28</div>
             </div>
             <div>
-              <div class="text-sm text-zinc-300">Top predicciones</div>
+              <div class="text-sm text-zinc-300" data-i18n="mnist.topPredictions">Top predicciones</div>
               <div id="mnistTop" class="mt-2 space-y-1 text-sm"></div>
             </div>
           </div>
@@ -316,16 +319,68 @@
   <section id="proyecto-estrella" class="max-w-6xl mx-auto px-4 py-12 sm:py-16">
     <div class="relative z-10">
     <div class="rounded-2xl border border-emerald-500/40 p-6 bg-gradient-to-tr from-emerald-500/10 to-transparent">
-      <h2 class="text-2xl sm:text-3xl font-extrabold nw-glow">Proyecto Chingón · RAG + Jarvis</h2>
-      <p class="text-zinc-300 mt-2 max-w-prose">RAG para preguntas de negocio; Jarvis orquesta herramientas y devuelve respuestas accionables. Demo y write-up próximamente.</p>
+      <h2 class="text-2xl sm:text-3xl font-extrabold nw-glow" data-i18n="project.title">Proyecto Chingón · DENUE León</h2>
+      <p class="text-zinc-300 mt-2 max-w-prose" data-i18n="project.description">Explorador interactivo del Directorio Estadístico Nacional de Unidades Económicas de León. Visualiza negocios, análisis geográfico y insights de datos comerciales en tiempo real.</p>
+      
+      <!-- Tags del proyecto -->
       <div class="mt-4 flex flex-wrap gap-2 text-xs text-zinc-400">
-        <span class="px-2 py-1 rounded-full border border-white/10">Embeddings</span>
-        <span class="px-2 py-1 rounded-full border border-white/10">Vector DB</span>
-        <span class="px-2 py-1 rounded-full border border-white/10">Tool Use</span>
-        <span class="px-2 py-1 rounded-full border border-white/10">Eval</span>
+        <span class="px-2 py-1 rounded-full border border-white/10">Streamlit</span>
+        <span class="px-2 py-1 rounded-full border border-white/10">Python</span>
+        <span class="px-2 py-1 rounded-full border border-white/10">Pandas</span>
+        <span class="px-2 py-1 rounded-full border border-white/10">Plotly</span>
+        <span class="px-2 py-1 rounded-full border border-white/10">Mapbox</span>
+        <span class="px-2 py-1 rounded-full border border-white/10">Data Viz</span>
       </div>
+
+      <!-- Iframe del proyecto -->
       <div class="mt-6">
-        <a href="rag-jarvis.html" class="shine inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500">Ver caso completo</a>
+        <div class="rounded-xl border border-emerald-500/60 overflow-hidden bg-black/40 relative">
+          <!-- Loading overlay -->
+          <div id="projectLoader" class="absolute inset-0 bg-zinc-900/80 backdrop-blur-sm flex items-center justify-center z-10 transition-opacity duration-300">
+            <div class="text-center">
+              <div class="animate-spin w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full mx-auto mb-2"></div>
+              <p class="text-sm text-emerald-400" data-i18n="project.loading">Cargando proyecto...</p>
+            </div>
+          </div>
+          
+          <iframe
+            id="projectFrame"
+            title="DENUE León - Explorador de Negocios"
+            class="w-full transition-opacity duration-300"
+            style="height: 600px; min-height: 500px;"
+            src="https://cashiers-bargain-ware-investigator.trycloudflare.com/"
+            frameborder="0"
+            allowfullscreen="true"
+            loading="lazy">
+          </iframe>
+        </div>
+        
+        <!-- Descripción técnica -->
+        <div class="mt-4 p-4 rounded-lg bg-black/40 border border-white/10">
+          <h4 class="font-semibold text-emerald-400 mb-2" data-i18n="project.techTitle">🛠️ Stack Técnico</h4>
+          <p class="text-sm text-zinc-300" data-i18n="project.techDescription">
+            Aplicación web desarrollada en Streamlit que procesa datos del INEGI para crear visualizaciones interactivas. 
+            Incluye mapas geoespaciales, análisis por sectores económicos y métricas de densidad empresarial.
+          </p>
+        </div>
+      </div>
+      
+      <!-- Botones de acción -->
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href="https://cashiers-bargain-ware-investigator.trycloudflare.com/" target="_blank" rel="noopener noreferrer" 
+           class="shine inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500" data-i18n="project.viewLive">
+          <span>Ver en vivo</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+          </svg>
+        </a>
+        <button onclick="toggleProjectFullscreen()" 
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-white/20 hover:border-emerald-400/60" data-i18n="project.fullscreen">
+          <span>Pantalla completa</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+          </svg>
+        </button>
       </div>
     </div>
     </div>
@@ -334,15 +389,15 @@
   <!-- CONTACTO -->
   <section id="contacto" class="max-w-6xl mx-auto px-4 py-16">
     <div class="rounded-2xl border border-white/10 p-6 bg-zinc-900/60">
-      <h2 class="text-2xl sm:text-3xl font-bold">Contacto</h2>
-      <p class="text-zinc-300 mt-2">¿Tienes un reto de BI / IA? Escríbeme:</p>
+      <h2 class="text-2xl sm:text-3xl font-bold" data-i18n="contact.title">Contacto</h2>
+      <p class="text-zinc-300 mt-2" data-i18n="contact.description">¿Tienes un reto de BI / IA? Escríbeme:</p>
       <div class="mt-4 flex flex-wrap gap-3 text-sm">
         <a class="px-3 py-2 rounded-lg border border-white/15 hover:border-emerald-400/60" href="mailto:tuemail@dominio.com">tuemail@dominio.com</a>
         <a class="px-3 py-2 rounded-lg border border-white/15 hover:border-emerald-400/60" href="https://www.linkedin.com/in/tuusuario" target="_blank" rel="noreferrer">LinkedIn</a>
         <a class="px-3 py-2 rounded-lg border border-white/15 hover:border-emerald-400/60" href="https://github.com/BlackEddit" target="_blank" rel="noreferrer">GitHub</a>
       </div>
     </div>
-    <footer class="text-xs text-zinc-500 text-center mt-8">© <span id="y"></span> NightWolf · Hecho con GitHub Pages</footer>
+    <footer class="text-xs text-zinc-500 text-center mt-8">© <span id="y"></span> NightWolf · <span data-i18n="contact.footer">Hecho con GitHub Pages</span></footer>
   </section>
 
   <!-- PLAYER SPOTIFY -->
@@ -355,7 +410,7 @@
     </div>
   </div>
   <button id="toggleBtn"
-    class="player-toggle px-3 py-1.5 text-xs rounded-full border border-white/15 hover:border-emerald-400/60 bg-zinc-900/80 backdrop-blur">
+    class="player-toggle px-3 py-1.5 text-xs rounded-full border border-white/15 hover:border-emerald-400/60 bg-zinc-900/80 backdrop-blur" data-i18n="player.hide">
     Ocultar música ⤵
   </button>
 
@@ -377,5 +432,50 @@
   <!-- Scripts -->
   <script src="assets/js/portfolio.js"></script>
   <script src="assets/js/mnist.js"></script>
+  <script src="assets/lang/i18n.js"></script>
+  
+  <script>
+    // Manejo del iframe del proyecto
+    document.addEventListener('DOMContentLoaded', function() {
+      const projectFrame = document.getElementById('projectFrame');
+      const projectLoader = document.getElementById('projectLoader');
+      
+      if (projectFrame && projectLoader) {
+        // Ocultar loader cuando el iframe carga
+        projectFrame.addEventListener('load', function() {
+          projectLoader.style.opacity = '0';
+          setTimeout(() => {
+            projectLoader.style.display = 'none';
+          }, 300);
+        });
+        
+        // Timeout de seguridad para ocultar loader
+        setTimeout(() => {
+          if (projectLoader.style.display !== 'none') {
+            projectLoader.style.opacity = '0';
+            setTimeout(() => {
+              projectLoader.style.display = 'none';
+            }, 300);
+          }
+        }, 10000); // 10 segundos máximo
+      }
+    });
+    
+    // Función para pantalla completa
+    function toggleProjectFullscreen() {
+      const projectFrame = document.getElementById('projectFrame');
+      if (!projectFrame) return;
+      
+      if (!document.fullscreenElement) {
+        projectFrame.requestFullscreen().catch(err => {
+          console.log('Error activando pantalla completa:', err);
+          // Fallback: abrir en nueva ventana
+          window.open('https://cashiers-bargain-ware-investigator.trycloudflare.com/', '_blank');
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    }
+  </script>
 </body>
 </html>

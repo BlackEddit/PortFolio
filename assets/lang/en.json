@@ -1,0 +1,64 @@
+{
+  "nav": {
+    "about": "About Me",
+    "dashboards": "Dashboards",
+    "models": "Models", 
+    "demo": "AI Demo",
+    "project": "Featured Project",
+    "contact": "Contact",
+    "cv": "Resume"
+  },
+  "hero": {
+    "title": "Edgar Sanchez",
+    "nickname": "BI - AI - DATA",
+    "subtitle": "Data · BI · Applied AI",
+    "description": "I build dashboards and data-driven solutions",
+    "viewProject": "View featured project",
+    "dashboards": "Dashboards"
+  },
+  "about": {
+    "title": "A bit about me",
+    "quote1": "i like the challenges",
+    "quote2": "Though... You doubt it, I make mistakes. I'm wrong. I learn...I continue",
+    "fact1": "Halo died in Reach",
+    "fact2": "im only human", 
+    "fact3": "meh!"
+  },
+  "dashboards": {
+    "title": "Dashboards",
+    "collaborate": "Let's collaborate?",
+    "switch": "Switch between the two reports with the selector.",
+    "loading": "Loading dashboard...",
+    "viewAll": "View all dashboards →"
+  },
+  "models": {
+    "title": "Models",
+    "viewMore": "View more models →"
+  },
+  "mnist": {
+    "title": "Demo: Digit Recognizer (0–9)",
+    "description": "Draw a number and the model will guess it. Runs 100% in your browser with TensorFlow.js.",
+    "clear": "Clear",
+    "predict": "Predict",
+    "tip": "Tip: write large and centered. White stroke on black background (like MNIST).",
+    "topPredictions": "Top predictions"
+  },
+  "contact": {
+    "title": "Contact",
+    "description": "Got a BI / AI challenge? Write me:",
+    "footer": "Made with GitHub Pages"
+  },
+  "player": {
+    "hide": "Hide music ⤵",
+    "show": "Show music ⤴"
+  },
+  "project": {
+    "title": "Featured Project · DENUE León",
+    "description": "Interactive explorer for the National Statistical Directory of Economic Units in León. Visualize businesses, geographic analysis and commercial data insights in real time.",
+    "loading": "Loading project...",
+    "techTitle": "🛠️ Tech Stack",
+    "techDescription": "Web application built with Streamlit that processes INEGI data to create interactive visualizations. Includes geospatial maps, economic sector analysis and business density metrics.",
+    "viewLive": "View Live",
+    "fullscreen": "Full Screen"
+  }
+}

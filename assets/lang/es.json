@@ -1,0 +1,64 @@
+{
+  "nav": {
+    "about": "Conóceme",
+    "dashboards": "Dashboards", 
+    "models": "Modelos",
+    "demo": "Demo IA",
+    "project": "Proyecto Chingón",
+    "contact": "Contacto",
+    "cv": "CV"
+  },
+  "hero": {
+    "title": "Edgar Sanchez",
+    "nickname": "BI - AI - DATA",
+    "subtitle": "Data · BI · IA Aplicada",
+    "description": "Construyo dashboards y cosas con datos",
+    "viewProject": "Ver proyecto chingón",
+    "dashboards": "Dashboards"
+  },
+  "about": {
+    "title": "Un poco de mí",
+    "quote1": "Me gustan los retos",
+    "quote2": "Aunque... Lo dudes, cometo errores. me equivoco. Aprendo...continiúo",
+    "fact1": "Halo murió en Reach",
+    "fact2": "im only human",
+    "fact3": "mhe!"
+  },
+  "dashboards": {
+    "title": "Dashboards",
+    "collaborate": "¿Colaboramos?",
+    "switch": "Cambia entre los dos reportes con el selector.",
+    "loading": "Cargando dashboard...",
+    "viewAll": "Ver todos los dashboards →"
+  },
+  "models": {
+    "title": "Modelos",
+    "viewMore": "Ver más modelos →"
+  },
+  "mnist": {
+    "title": "Demo: Reconocedor de Dígitos (0–9)",
+    "description": "Dibuja un número y el modelo lo adivina. Corre 100% en tu navegador con TensorFlow.js.",
+    "clear": "Limpiar",
+    "predict": "Predecir",
+    "tip": "Consejo: escribe grande y centrado. Trazo blanco sobre fondo negro (como MNIST).",
+    "topPredictions": "Top predicciones"
+  },
+  "contact": {
+    "title": "Contacto",
+    "description": "¿Tienes un reto de BI / IA? Escríbeme:",
+    "footer": "Hecho con GitHub Pages"
+  },
+  "player": {
+    "hide": "Ocultar música ⤵",
+    "show": "Mostrar música ⤴"
+  },
+  "project": {
+    "title": "Proyecto Chingón · DENUE León",
+    "description": "Explorador interactivo del Directorio Estadístico Nacional de Unidades Económicas de León. Visualiza negocios, análisis geográfico y insights de datos comerciales en tiempo real.",
+    "loading": "Cargando proyecto...",
+    "techTitle": "🛠️ Stack Técnico",
+    "techDescription": "Aplicación web desarrollada en Streamlit que procesa datos del INEGI para crear visualizaciones interactivas. Incluye mapas geoespaciales, análisis por sectores económicos y métricas de densidad empresarial.",
+    "viewLive": "Ver en vivo",
+    "fullscreen": "Pantalla completa"
+  }
+}

@@ -1,0 +1,333 @@
+/* ===== LANGUAGE SELECTOR COMPONENT ===== */
+
+/* ===== VARIABLES DEL COMPONENTE ===== */
+.language-selector {
+  /* Variables CSS personalizables */
+  --lang-bg: rgba(39, 39, 42, 0.8);
+  --lang-border: rgba(255, 255, 255, 0.1);
+  --lang-text: #f4f4f5;
+  --lang-hover-bg: rgba(39, 39, 42, 0.95);
+  --lang-hover-border: rgba(16, 185, 129, 0.6);
+  --lang-accent: #10b981;
+  --lang-dropdown-bg: rgba(24, 24, 27, 0.95);
+  --lang-option-hover: rgba(16, 185, 129, 0.1);
+}
+
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.language-selector {
+  position: fixed;
+  top: 20px;
+  right: 80px; /* Espacio para el theme toggle */
+  z-index: 100;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* ===== BOTÓN PRINCIPAL ===== */
+.lang-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--lang-bg);
+  border: 1px solid var(--lang-border);
+  border-radius: 8px;
+  color: var(--lang-text);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+  user-select: none;
+  outline: none;
+}
+
+.lang-toggle:hover {
+  background: var(--lang-hover-bg);
+  border-color: var(--lang-hover-border);
+  transform: translateY(-1px);
+}
+
+.lang-toggle:focus-visible {
+  outline: 2px solid var(--lang-accent);
+  outline-offset: 2px;
+}
+
+.lang-toggle:active {
+  transform: translateY(0);
+}
+
+/* ===== ELEMENTOS DEL BOTÓN ===== */
+.lang-toggle .flag {
+  font-size: 16px;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.lang-toggle:hover .flag {
+  transform: scale(1.1);
+}
+
+.lang-toggle .lang-text {
+  font-family: 'Monaco', 'Consolas', 'SF Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* ===== DROPDOWN MENU ===== */
+.lang-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: var(--lang-dropdown-bg);
+  border: 1px solid var(--lang-border);
+  border-radius: 8px;
+  backdrop-filter: blur(12px);
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px) scale(0.95);
+  transition: all 0.2s ease;
+  min-width: 140px;
+  overflow: hidden;
+  z-index: 101;
+}
+
+.lang-dropdown.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+/* ===== OPCIONES DEL DROPDOWN ===== */
+.lang-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  color: var(--lang-text);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  user-select: none;
+}
+
+.lang-option:last-child {
+  border-bottom: none;
+}
+
+.lang-option:hover {
+  background: var(--lang-option-hover);
+  color: var(--lang-accent);
+  padding-left: 16px;
+}
+
+.lang-option.active {
+  background: rgba(var(--lang-accent), 0.15);
+  color: var(--lang-accent);
+  font-weight: 600;
+}
+
+/* ===== INDICADOR DE IDIOMA ACTIVO ===== */
+.lang-option.active::after {
+  content: '✓';
+  margin-left: auto;
+  color: var(--lang-accent);
+  font-weight: bold;
+  font-size: 12px;
+}
+
+/* ===== EFECTO DE LOADING ===== */
+.language-selector.loading .lang-toggle {
+  pointer-events: none;
+  opacity: 0.7;
+  position: relative;
+}
+
+.language-selector.loading .lang-toggle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid transparent;
+  border-top-color: var(--lang-accent);
+  border-radius: 50%;
+  animation: langSpin 1s linear infinite;
+  transform: translateY(-50%);
+}
+
+@keyframes langSpin {
+  0% { transform: translateY(-50%) rotate(0deg); }
+  100% { transform: translateY(-50%) rotate(360deg); }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .language-selector {
+    top: 15px;
+    right: 60px;
+  }
+  
+  .lang-toggle {
+    padding: 6px 10px;
+    font-size: 12px;
+    gap: 6px;
+  }
+  
+  .lang-toggle .flag {
+    font-size: 14px;
+  }
+  
+  .lang-toggle .lang-text {
+    font-size: 10px;
+  }
+  
+  .lang-dropdown {
+    min-width: 120px;
+    margin-top: 6px;
+  }
+  
+  .lang-option {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+  
+  .lang-option:hover {
+    padding-left: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .language-selector {
+    top: 12px;
+    right: 50px;
+  }
+  
+  .lang-toggle {
+    padding: 5px 8px;
+    gap: 4px;
+  }
+  
+  .lang-toggle .lang-text {
+    display: none; /* Solo mostrar bandera en móviles muy pequeños */
+  }
+}
+
+/* ===== ADAPTACIÓN A TEMAS ===== */
+
+/* Tema claro */
+[data-theme="light"] .language-selector {
+  --lang-bg: rgba(255, 255, 255, 0.9);
+  --lang-border: rgba(0, 0, 0, 0.1);
+  --lang-text: #18181b;
+  --lang-hover-bg: rgba(255, 255, 255, 1);
+  --lang-hover-border: rgba(16, 185, 129, 0.6);
+  --lang-accent: #059669;
+  --lang-dropdown-bg: rgba(255, 255, 255, 0.95);
+  --lang-option-hover: rgba(16, 185, 129, 0.1);
+}
+
+/* Tema cyberpunk */
+[data-theme="cyber"] .language-selector {
+  --lang-bg: rgba(0, 0, 0, 0.8);
+  --lang-border: rgba(0, 255, 255, 0.3);
+  --lang-text: #00ffff;
+  --lang-hover-bg: rgba(0, 0, 0, 0.95);
+  --lang-hover-border: rgba(236, 72, 153, 0.6);
+  --lang-accent: #ff00ff;
+  --lang-dropdown-bg: rgba(0, 0, 0, 0.95);
+  --lang-option-hover: rgba(236, 72, 153, 0.2);
+}
+
+[data-theme="cyber"] .lang-toggle:hover {
+  box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+}
+
+/* Tema océano */
+[data-theme="ocean"] .language-selector {
+  --lang-bg: rgba(30, 58, 138, 0.8);
+  --lang-border: rgba(219, 234, 254, 0.15);
+  --lang-text: #dbeafe;
+  --lang-hover-bg: rgba(30, 58, 138, 0.95);
+  --lang-hover-border: rgba(59, 130, 246, 0.6);
+  --lang-accent: #3b82f6;
+  --lang-dropdown-bg: rgba(29, 78, 216, 0.95);
+  --lang-option-hover: rgba(59, 130, 246, 0.2);
+}
+
+[data-theme="ocean"] .lang-toggle:hover {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+/* Tema morado */
+[data-theme="purple"] .language-selector {
+  --lang-bg: rgba(107, 33, 168, 0.8);
+  --lang-border: rgba(243, 232, 255, 0.15);
+  --lang-text: #f3e8ff;
+  --lang-hover-bg: rgba(107, 33, 168, 0.95);
+  --lang-hover-border: rgba(168, 85, 247, 0.6);
+  --lang-accent: #a855f7;
+  --lang-dropdown-bg: rgba(126, 34, 206, 0.95);
+  --lang-option-hover: rgba(168, 85, 247, 0.2);
+}
+
+[data-theme="purple"] .lang-toggle:hover {
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+}
+
+/* Tema matrix */
+[data-theme="matrix"] .language-selector {
+  --lang-bg: rgba(0, 40, 0, 0.8);
+  --lang-border: rgba(0, 255, 0, 0.2);
+  --lang-text: #00ff00;
+  --lang-hover-bg: rgba(0, 40, 0, 0.95);
+  --lang-hover-border: rgba(34, 197, 94, 0.6);
+  --lang-accent: #00ff00;
+  --lang-dropdown-bg: rgba(0, 60, 0, 0.95);
+  --lang-option-hover: rgba(34, 197, 94, 0.2);
+}
+
+[data-theme="matrix"] .lang-toggle:hover {
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+}
+
+/* ===== ACCESIBILIDAD ===== */
+@media (prefers-reduced-motion: reduce) {
+  .lang-toggle,
+  .lang-dropdown,
+  .lang-option,
+  .lang-toggle .flag {
+    transition: none;
+  }
+  
+  .language-selector.loading .lang-toggle::after {
+    animation: none;
+  }
+}
+
+/* Focus para navegación por teclado */
+.lang-option:focus {
+  outline: 2px solid var(--lang-accent);
+  outline-offset: -2px;
+  background: var(--lang-option-hover);
+}
+
+/* ===== UTILIDADES ===== */
+.lang-dropdown--left {
+  right: auto;
+  left: 0;
+}
+
+.lang-dropdown--bottom {
+  top: auto;
+  bottom: 100%;
+  margin-top: 0;
+  margin-bottom: 8px;
+}
