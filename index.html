@@ -213,17 +213,26 @@ Está bien armado tu <head>, solo le falta más personalidad en los textos.-->
       </header>
 
       <p class="text-sm text-zinc-300 mt-2" data-i18n="dashboards.switch">
-        Cambia entre los dos reportes con el selector.
+        Carrusel automático - cambia cada 10 segundos.
       </p>
 
-      <!-- Conmutador -->
-      <div class="mt-3 inline-flex items-center gap-1 p-1 bg-zinc-800/40 border border-white/10 rounded-xl text-xs">
-        <button id="btnDash1" class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white shadow">
-          Complementos 2025
-        </button>
-        <button id="btnDash2" class="px-3 py-1.5 rounded-lg hover:bg-zinc-700">
-          Diario Complementos
-        </button>
+      <!-- Carrusel de dashboards -->
+      <div class="mt-3 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="flex gap-1">
+            <div id="dot-0" class="w-2 h-2 rounded-full bg-emerald-500"></div>
+            <div id="dot-1" class="w-2 h-2 rounded-full bg-zinc-600"></div>
+            <div id="dot-2" class="w-2 h-2 rounded-full bg-zinc-600"></div>
+          </div>
+          <span id="dashTitle" class="text-sm font-medium text-emerald-400">Complementos 2025</span>
+        </div>
+        
+        <div class="flex items-center gap-2 text-xs text-zinc-400">
+          <button id="prevDash" class="p-1 hover:text-emerald-400 transition-colors">←</button>
+          <span id="dashCounter">1/3</span>
+          <button id="nextDash" class="p-1 hover:text-emerald-400 transition-colors">→</button>
+          <button id="playPause" class="p-1 hover:text-emerald-400 ml-2" title="Pausar/Reanudar">⏸️</button>
+        </div>
       </div>
 
       <!-- Contenedor del iframe -->
@@ -505,6 +514,95 @@ Está bien armado tu <head>, solo le falta más personalidad en los textos.-->
   </script>
 
   <script>
+    // Configuración de dashboards - fácil de mantener
+    const DASHBOARDS = [
+      {
+        id: 'complementos2025',
+        title: 'Complementos 2025',
+        description: 'Dashboard histórico de complementos de tarifa',
+        url: 'https://app.powerbi.com/view?r=eyJrIjoiNjhhYTRmYzMtZTI4Zi00MzlhLWEwN2QtMGNmYjEzZGJhNTQyIiwidCI6IjEyMDFlNjcwLTI4YjQtNDg1ZC05OTNhLWIxYzU0OGRhMmZhYiJ9',
+        tags: ['Histórico', 'CFE', 'Tarifas']
+      },
+      {
+        id: 'diario',
+        title: 'Diario Complementos',
+        description: 'Monitoreo diario de complementos',
+        url: 'https://app.powerbi.com/view?r=eyJrIjoiNjhhYTRmYzMtZTI4Zi00MzlhLWEwN2QtMGNmYjEzZGJhNTQyIiwidCI6IjEyMDFlNjcwLTI4YjQtNDg1ZC05OTNhLWIxYzU0OGRhMmZhYiJ9',
+        tags: ['Diario', 'Monitoreo', 'Tiempo Real']
+      },
+      {
+        id: 'indicadores',
+        title: 'Indicadores Institucionales',
+        description: 'Dashboard institucional educativo',
+        url: 'https://app.powerbi.com/view?r=eyJrIjoiYzVjMzVjMGQtYmVlNC00YjlkLWE2ZTEtNDRmMThjOTRlZDNiIiwidCI6IjEyMDFlNjcwLTI4YjQtNDg1ZC05OTNhLWIxYzU0OGRhMmZhYiJ9',
+        tags: ['Educación', 'KPIs', 'Institucional']
+      }
+    ];
+
+    // Carrusel de dashboards
+    let currentDashIndex = 0;
+    let carouselInterval = null;
+    let isPaused = false;
+
+    function updateDashboard(index) {
+      const dashboard = DASHBOARDS[index];
+      const iframe = document.getElementById('pbiFrame');
+      const title = document.getElementById('dashTitle');
+      const counter = document.getElementById('dashCounter');
+      
+      // Actualizar iframe
+      if (iframe) {
+        iframe.src = dashboard.url;
+        iframe.title = dashboard.title;
+      }
+      
+      // Actualizar UI
+      if (title) title.textContent = dashboard.title;
+      if (counter) counter.textContent = `${index + 1}/${DASHBOARDS.length}`;
+      
+      // Actualizar dots
+      for (let i = 0; i < DASHBOARDS.length; i++) {
+        const dot = document.getElementById(`dot-${i}`);
+        if (dot) {
+          dot.className = i === index 
+            ? 'w-2 h-2 rounded-full bg-emerald-500' 
+            : 'w-2 h-2 rounded-full bg-zinc-600';
+        }
+      }
+      
+      currentDashIndex = index;
+    }
+
+    function nextDashboard() {
+      const nextIndex = (currentDashIndex + 1) % DASHBOARDS.length;
+      updateDashboard(nextIndex);
+    }
+
+    function prevDashboard() {
+      const prevIndex = (currentDashIndex - 1 + DASHBOARDS.length) % DASHBOARDS.length;
+      updateDashboard(prevIndex);
+    }
+
+    function startCarousel() {
+      if (carouselInterval) clearInterval(carouselInterval);
+      carouselInterval = setInterval(nextDashboard, 10000); // 10 segundos
+      isPaused = false;
+      
+      const playPauseBtn = document.getElementById('playPause');
+      if (playPauseBtn) playPauseBtn.textContent = '⏸️';
+    }
+
+    function pauseCarousel() {
+      if (carouselInterval) {
+        clearInterval(carouselInterval);
+        carouselInterval = null;
+      }
+      isPaused = true;
+      
+      const playPauseBtn = document.getElementById('playPause');
+      if (playPauseBtn) playPauseBtn.textContent = '▶️';
+    }
+
     // Sistema de idiomas súper simple
     document.addEventListener('DOMContentLoaded', function() {
       let currentLang = 'es';
@@ -571,6 +669,35 @@ Está bien armado tu <head>, solo le falta más personalidad en los textos.-->
       
       // Inicializar
       changeLanguage('es');
+      
+      // Inicializar carrusel de dashboards
+      const nextBtn = document.getElementById('nextDash');
+      const prevBtn = document.getElementById('prevDash');
+      const playPauseBtn = document.getElementById('playPause');
+      
+      if (nextBtn) nextBtn.addEventListener('click', () => {
+        nextDashboard();
+        pauseCarousel(); // Pausar auto-play al interactuar
+      });
+      
+      if (prevBtn) prevBtn.addEventListener('click', () => {
+        prevDashboard();
+        pauseCarousel(); // Pausar auto-play al interactuar
+      });
+      
+      if (playPauseBtn) playPauseBtn.addEventListener('click', () => {
+        if (isPaused) {
+          startCarousel();
+        } else {
+          pauseCarousel();
+        }
+      });
+      
+      // Inicializar con el primer dashboard
+      updateDashboard(0);
+      startCarousel();
+      
+      console.log('Dashboard carousel initialized with', DASHBOARDS.length, 'dashboards');
     });
   </script>
 </body>

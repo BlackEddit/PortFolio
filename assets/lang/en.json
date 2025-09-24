@@ -27,7 +27,7 @@
   "dashboards": {
     "title": "Dashboards",
     "collaborate": "Let's collaborate?",
-    "switch": "Switch between the two reports with the selector.",
+    "switch": "Auto carousel - changes every 10 seconds.",
     "loading": "Loading dashboard...",
     "viewAll": "View all dashboards →"
   },
