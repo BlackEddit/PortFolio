@@ -1,6 +1,14 @@
 /**
  * Dashboard Carousel System
- * Maneja la rotación automática de dashboards de Power BI
+ * Maneja la rotació  // Actualizar indicadores de puntos
+  for (let i = 0; i < DASHBOARDS.length; i++) {
+    const dot = document.getElementById(`dot-${i}`);
+    if (dot) {
+      dot.className = i === index 
+        ? 'w-2 h-2 rounded-full bg-blue-500' 
+        : 'w-2 h-2 rounded-full bg-zinc-600';
+    }
+  }ica de dashboards de Power BI
  */
 
 // Configuración de dashboards - fácil de mantener
@@ -58,7 +66,7 @@ function updateDashboard(index) {
     const dot = document.getElementById(`dot-${i}`);
     if (dot) {
       dot.className = i === index 
-        ? 'w-2 h-2 rounded-full bg-emerald-500' 
+        ? 'w-2 h-2 rounded-full bg-blue-500' 
         : 'w-2 h-2 rounded-full bg-zinc-600';
     }
   }
