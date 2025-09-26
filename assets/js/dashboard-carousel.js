@@ -13,6 +13,8 @@
 
 // Configuración de dashboards - fácil de mantener
 const DASHBOARDS = [
+  // TEMPORALMENTE COMENTADOS - LISTOS PARA ACTIVAR CUANDO ESTÉN ACTUALIZADOS
+  /*
   {
     id: 'complementos2025',
     title: 'Complementos 2025',
@@ -27,6 +29,8 @@ const DASHBOARDS = [
     url: 'https://app.powerbi.com/view?r=eyJrIjoiNjhhYTRmYzMtZTI4Zi00MzlhLWEwN2QtMGNmYjEzZGJhNTQyIiwidCI6IjEyMDFlNjcwLTI4YjQtNDg1ZC05OTNhLWIxYzU0OGRhMmZhYiJ9',
     tags: ['Diario', 'Monitoreo', 'Tiempo Real']
   },
+  */
+  // DASHBOARD ACTIVO ACTUALMENTE
   {
     id: 'indicadores',
     title: 'Indicadores Institucionales',
