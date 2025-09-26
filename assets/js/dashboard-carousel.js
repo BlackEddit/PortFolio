@@ -54,6 +54,7 @@ function updateDashboard(index) {
   const iframe = document.getElementById('pbiFrame');
   const title = document.getElementById('dashTitle');
   const counter = document.getElementById('dashCounter');
+  const fallbackLink = document.getElementById('currentDashboardLink');
   
   // Actualizar iframe
   if (iframe) {
@@ -64,6 +65,17 @@ function updateDashboard(index) {
   // Actualizar UI
   if (title) title.textContent = dashboard.title;
   if (counter) counter.textContent = `${index + 1}/${DASHBOARDS.length}`;
+  
+  // Actualizar link de fallback con el dashboard actual
+  if (fallbackLink) {
+    fallbackLink.href = dashboard.url;
+  }
+  
+  // Actualizar botón de acceso rápido
+  const quickAccessBtn = document.getElementById('quickAccessBtn');
+  if (quickAccessBtn) {
+    quickAccessBtn.href = dashboard.url;
+  }
   
   // Actualizar dots indicadores
   for (let i = 0; i < DASHBOARDS.length; i++) {

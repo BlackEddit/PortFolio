@@ -150,8 +150,8 @@ class NightWolfPortfolio {
   }
 
   initTypingAnimation() {
-    const text1 = "Keep it simple";
-    const text2 = "Hazlo Simple";
+    const text1 = "I dont know everithing";
+    const text2 = "But I want to learn, to get things done";
     const el1 = document.getElementById('typingSlogan');
     const el2 = document.getElementById('typingSlogan2');
     

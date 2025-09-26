@@ -10,26 +10,34 @@
   },
   "hero": {
     "title": "Edgar Sanchez",
-    "nickname": "BI - AI - DATA",
+    "nickname": "\"BI - AI - DATA\"",
     "subtitle": "Data · BI · Applied AI",
     "description": "I build dashboards and data-driven solutions",
-    "viewProject": "View featured project",
-    "dashboards": "Dashboards"
+    "viewProject": "View Last Project",
+    "dashboards": "Dashboards",
+    "downloadCV": "Download Resume"
   },
   "about": {
     "title": "A bit about me",
-    "quote1": "i like the challenges",
+    "quote1": "\"I love <span class=\"text-emerald-400\">challenges</span>\"",
     "quote2": "Though... You doubt it, I make mistakes. I'm wrong. I learn...I continue",
     "fact1": "Halo died in Reach",
-    "fact2": "im only human", 
-    "fact3": "meh!"
+    "fact2": "I'm only human", 
+    "fact3": "meh!",
+    "skillBI": "Business Intelligence",
+    "skillBIDesc": "Power BI • DAX • Visualization",
+    "skillML": "Machine Learning",
+    "skillMLDesc": "Python • TensorFlow • Predictive Models",
+    "skillDS": "Data Science",
+    "skillDSDesc": "Analysis • Insights • Automation"
   },
   "dashboards": {
     "title": "Dashboards",
     "collaborate": "Let's collaborate?",
     "switch": "Auto carousel - changes every 10 seconds.",
     "loading": "Loading dashboard...",
-    "viewAll": "View all dashboards →"
+    "viewAll": "View all dashboards →",
+    "constructionBanner": "🚧 <strong>Under construction:</strong> I'll be adding more dashboards to showcase."
   },
   "models": {
     "title": "Models",
@@ -46,7 +54,8 @@
   "contact": {
     "title": "Contact",
     "description": "Got a BI / AI challenge? Write me:",
-    "footer": "Made with GitHub Pages"
+    "footer": "Made with GitHub Pages",
+    "emailButton": "📧 Send email"
   },
   "player": {
     "hide": "Hide music ⤵",
@@ -59,6 +68,9 @@
     "techTitle": "🛠️ Tech Stack",
     "techDescription": "Web application built with Streamlit that processes INEGI data to create interactive visualizations. Includes geospatial maps, economic sector analysis and business density metrics.",
     "viewLive": "View Live",
-    "fullscreen": "Full Screen"
+    "fullscreen": "Full Screen",
+    "constructionBanner": "🚧 <strong>Under construction:</strong> Next is to add Puppeteer or some web scraping, about León news.",
+    "constructionBanner2": "To get to know the city better from a technological perspective",
+    "constructionBanner3": "Also looking to migrate from geojson to pmtiles, for greater speed"
   }
 }

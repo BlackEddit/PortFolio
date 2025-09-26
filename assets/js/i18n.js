@@ -44,13 +44,38 @@ class I18nSystem {
    * @param {Object} translations - Objeto con traducciones
    */
   applyTranslations(translations) {
+    // Manejar elementos con clases de idioma
+    this.updateLanguageElements();
+    
     const elements = document.querySelectorAll('[data-i18n]');
     elements.forEach(element => {
       const key = element.getAttribute('data-i18n');
       const translation = this.getNestedValue(translations, key);
       if (translation) {
-        element.textContent = translation;
+        // Caso especial para elementos que pueden contener HTML (banners y quotes)
+        if (key.includes('constructionBanner') || key.includes('quote1')) {
+          element.innerHTML = translation;
+        }
+        // Caso normal
+        else {
+          element.textContent = translation;
+        }
       }
+    });
+  }
+
+  /**
+   * Actualiza la visibilidad de elementos según el idioma
+   */
+  updateLanguageElements() {
+    // Ocultar todos los elementos de idioma
+    document.querySelectorAll('.lang-es, .lang-en').forEach(el => {
+      el.classList.add('hidden');
+    });
+    
+    // Mostrar elementos del idioma actual
+    document.querySelectorAll(`.lang-${this.currentLang}`).forEach(el => {
+      el.classList.remove('hidden');
     });
   }
 
