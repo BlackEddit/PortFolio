@@ -175,7 +175,7 @@ function initDashboardCarousel() {
   
   // Inicializar con el primer dashboard
   updateDashboard(0);
-  startCarousel();
+  // startCarousel(); // AUTOPLAY DESHABILITADO - Control manual del usuario
   
   console.log(`Carrusel inicializado con ${DASHBOARDS.length} dashboards`);
 }
