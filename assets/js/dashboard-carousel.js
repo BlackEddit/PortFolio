@@ -13,15 +13,16 @@
 
 // Configuración de dashboards - fácil de mantener
 const DASHBOARDS = [
+  
+ {
+    id: 'ford2025',
+    title: 'FORD 2025',
+    description: 'Dashboard de análisis Ford 2025',
+    url: 'https://app.powerbi.com/view?r=eyJrIjoiYjYzZDFlYWQtODQ5Ny00OWY0LWE1OGItNGUxN2FkM2I3NmE1IiwidCI6IjEyMDFlNjcwLTI4YjQtNDg1ZC05OTNhLWIxYzU0OGRhMmZhYiJ9',
+    tags: ['Ford', 'Análisis', '2025']
+  },
   // TEMPORALMENTE COMENTADOS - LISTOS PARA ACTIVAR CUANDO ESTÉN ACTUALIZADOS
   /*
-  {
-    id: 'complementos2025',
-    title: 'Complementos 2025',
-    description: 'Dashboard histórico de complementos de tarifa',
-    url: 'https://app.powerbi.com/view?r=eyJrIjoiNjhhYTRmYzMtZTI4Zi00MzlhLWEwN2QtMGNmYjEzZGJhNTQyIiwidCI6IjEyMDFlNjcwLTI4YjQtNDg1ZC05OTNhLWIxYzU0OGRhMmZhYiJ9',
-    tags: ['Histórico', 'CFE', 'Tarifas']
-  },
   {
     id: 'diario',
     title: 'Diario Complementos',
