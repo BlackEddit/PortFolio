@@ -1,6 +1,6 @@
 [build]
   publish = "."
-  command = "echo 'Building portfolio...'"
+  command = "chmod +x build.sh && ./build.sh"
 
 [build.environment]
   NODE_VERSION = "18"
