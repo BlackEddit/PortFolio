@@ -33,6 +33,17 @@
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="stylesheet" href="assets/css/language-selector.css">
   
+  <!-- Chat Assistant Styles -->
+  <link rel="stylesheet" href="assets/css/chat-assistant/main.css">
+  <link rel="stylesheet" href="assets/css/chat-assistant/messages.css">
+  <link rel="stylesheet" href="assets/css/chat-assistant/input.css">
+  
+  <!-- Raven Companion Styles -->
+  <link rel="stylesheet" href="assets/css/raven-companion/main.css">
+  <link rel="stylesheet" href="assets/css/raven-companion/animations.css">
+  <link rel="stylesheet" href="assets/css/raven-companion/animations-epic.css">
+  <link rel="stylesheet" href="assets/css/raven-companion/bubble.css">
+  
   <!-- Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
@@ -682,5 +693,44 @@ Está bien armado tu <head>, solo le falta más personalidad en los textos.-->
   
   <!-- Piano Effect -->
   <script src="assets/js/piano-effect.js"></script>
+  
+  <!-- Environment Config -->
+  <script src="assets/js/env-config.js"></script>
+  <script src="config.js" onerror="console.log('No config.js - usando producción')"></script>
+  
+  <!-- Chat Assistant Scripts -->
+  <script src="assets/js/chat-assistant/groq-api.js"></script>
+  <script src="assets/js/groq-proxy.js"></script>
+  <script src="assets/js/raven-companion/main.js"></script>
+  <script src="assets/js/chat-assistant/main.js"></script>
+  
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Obtener API key de múltiples fuentes
+    const apiKey = window.getAPIKey ? window.getAPIKey() : null;
+    
+    console.log('🌐 Entorno detectado:', {
+      esDesarrollo: !!window.CONFIG,
+      tieneAPIKey: !!apiKey,
+      esProduccion: !window.CONFIG
+    });
+    
+    // Inicializar Chat Assistant 🤖
+    window.chatAssistantInstance = new ChatAssistant({
+      apiKey: apiKey,
+      autoOpen: false,
+      position: 'bottom-right'
+    });
+    
+    // Inicializar Cuervo Compañero 🐦‍⬛ (se conectará automáticamente al chat)
+    window.ravenCompanionInstance = new RavenCompanion();
+    
+    // Conectar cuervo con chat
+    window.chatAssistantInstance.raven = window.ravenCompanionInstance;
+    
+    console.log('💬 Chat Assistant con Cuervo inicializado', apiKey ? '(Con API)' : '(Modo fallback)');
+    console.log('🐦‍⬛ Click en el cuervo para abrir el chat');
+  });
+  </script>
 </body>
 </html>

@@ -1,0 +1,174 @@
+/* ===========================================
+   RAVEN COMPANION - EPIC STYLES 🔥
+   Estilos épicos del cuervo compañero
+   =========================================== */
+
+.raven-companion {
+  position: fixed;
+  bottom: 140px;
+  right: 30px;
+  z-index: 999;
+  pointer-events: auto;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  cursor: pointer;
+  transform-origin: center bottom;
+}
+
+.raven-companion.epic-raven {
+  animation: epicFloat 6s ease-in-out infinite;
+}
+
+/* Container del cuervo */
+.raven-container {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Sombra del cuervo */
+.raven-shadow {
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 8px;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.3) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: shadowPulse 3s ease-in-out infinite;
+}
+
+/* Cuerpo principal del cuervo */
+.raven-body {
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+/* SVG del cuervo */
+.raven-svg {
+  filter: drop-shadow(0 4px 12px rgba(0, 255, 255, 0.2));
+  transition: all 0.3s ease;
+}
+
+/* Aura mágica */
+.raven-aura {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, 
+    rgba(0, 255, 255, 0.1) 0%, 
+    rgba(16, 185, 129, 0.05) 50%, 
+    transparent 70%);
+  border-radius: 50%;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Partículas mágicas */
+.magic-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #00ffff;
+  border-radius: 50%;
+  opacity: 0;
+  animation: particleFloat 4s ease-in-out infinite;
+}
+
+.particle:nth-child(1) {
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.particle:nth-child(2) {
+  top: 60%;
+  right: 15%;
+  animation-delay: 1.5s;
+}
+
+.particle:nth-child(3) {
+  bottom: 30%;
+  left: 80%;
+  animation-delay: 3s;
+}
+
+/* Raven States */
+.raven-companion.idle {
+  filter: brightness(0.8);
+}
+
+.raven-companion.active {
+  filter: brightness(1.2);
+  animation: ravenGlow 2s ease-in-out infinite;
+}
+
+.raven-companion.listening {
+  animation: ravenPulse 1s ease-in-out infinite;
+}
+
+.raven-companion.floating {
+  animation: ravenFloat 6s ease-in-out infinite;
+}
+
+.raven-companion.flying {
+  animation: ravenFly 2s ease-in-out;
+}
+
+.raven-companion.perched {
+  animation: ravenPerch 0.5s ease-out;
+}
+
+.raven-companion.thinking {
+  animation: ravenThink 2s ease-in-out infinite;
+}
+
+/* Raven Glow Effect */
+@keyframes ravenGlow {
+  0%, 100% {
+    filter: brightness(1.2) drop-shadow(0 0 5px rgba(16, 185, 129, 0.3));
+  }
+  50% {
+    filter: brightness(1.5) drop-shadow(0 0 10px rgba(16, 185, 129, 0.6));
+  }
+}
+
+@keyframes ravenPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .raven-companion {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .raven-companion {
+    font-size: 24px;
+  }
+}
