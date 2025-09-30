@@ -1,0 +1,7 @@
+<!-- Netlify Environment Variables Injection -->
+<script>
+  // Inyectar variables de entorno de Netlify
+  if (typeof window !== 'undefined') {
+    window.NETLIFY_GROQ_API_KEY = '{{ process.env.GROQ_API_KEY }}';
+  }
+</script>

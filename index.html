@@ -705,19 +705,14 @@ Está bien armado tu <head>, solo le falta más personalidad en los textos.-->
   <script src="assets/js/chat-assistant/main.js"></script>
   
   <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Obtener API key de múltiples fuentes
-    const apiKey = window.getAPIKey ? window.getAPIKey() : null;
-    
+  document.addEventListener('DOMContentLoaded', async function() {
     console.log('🌐 Entorno detectado:', {
       esDesarrollo: !!window.CONFIG,
-      tieneAPIKey: !!apiKey,
       esProduccion: !window.CONFIG
     });
     
-    // Inicializar Chat Assistant 🤖
+    // Inicializar Chat Assistant 🤖 (API key se carga internamente)
     window.chatAssistantInstance = new ChatAssistant({
-      apiKey: apiKey,
       autoOpen: false,
       position: 'bottom-right'
     });
@@ -728,7 +723,7 @@ Está bien armado tu <head>, solo le falta más personalidad en los textos.-->
     // Conectar cuervo con chat
     window.chatAssistantInstance.raven = window.ravenCompanionInstance;
     
-    console.log('💬 Chat Assistant con Cuervo inicializado', apiKey ? '(Con API)' : '(Modo fallback)');
+    console.log('💬 Chat Assistant con Cuervo inicializado');
     console.log('🐦‍⬛ Click en el cuervo para abrir el chat');
   });
   </script>

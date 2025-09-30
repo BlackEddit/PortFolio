@@ -37,10 +37,10 @@ class ChatAssistant {
   /**
    * Inicializar el chat assistant
    */
-  init() {
+  async init() {
     this.createElements();
     this.setupEventListeners();
-    this.initializeAPI();
+    await this.initializeAPI();
     this.initializeRaven();
     this.addWelcomeMessage();
     
@@ -172,20 +172,26 @@ class ChatAssistant {
   /**
    * Inicializar API de Groq
    */
-  initializeAPI() {
-    console.log('🔧 Inicializando API...', {
-      hasApiKey: !!this.config.apiKey,
-      apiKeyLength: this.config.apiKey?.length,
+  async initializeAPI() {
+    console.log('🔧 Inicializando API...');
+    
+    // Obtener API key (puede ser asíncrona)
+    const apiKey = await getAPIKey();
+    
+    console.log('🔍 API Key check:', {
+      hasApiKey: !!apiKey,
+      apiKeyLength: apiKey?.length,
       hasGroqAPI: !!window.GroqAPI
     });
     
-    if (this.config.apiKey && window.GroqAPI) {
-      this.groqAPI = new window.GroqAPI(this.config.apiKey);
-      console.log('✅ Groq API initialized con key:', this.config.apiKey.substring(0, 10) + '...');
+    if (apiKey && window.GroqAPI) {
+      this.config.apiKey = apiKey;
+      this.groqAPI = new window.GroqAPI(apiKey);
+      console.log('✅ Groq API initialized con key:', apiKey.substring(0, 10) + '...');
     } else {
       console.warn('⚠️ Groq API key not provided or GroqAPI not loaded', {
-        apiKey: this.config.apiKey,
-        GroqAPI: window.GroqAPI
+        apiKey: !!apiKey,
+        GroqAPI: !!window.GroqAPI
       });
     }
   }
