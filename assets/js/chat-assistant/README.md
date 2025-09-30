@@ -1,6 +1,8 @@
-# 🤖 Chat Assistant con Cuervo Compañero
+# 🤖 Chat AI Assistant - Sistema Completo
 
-Sistema modular de chat inteligente con IA (Groq API) y un cuervo animado que sigue al usuario.
+**Sistema modular de chat inteligente integrado con Groq API y Raven Companion animado**
+
+Documentación técnica completa del sistema de IA implementado en el portafolio.
 
 ## 📁 Estructura del Proyecto
 
