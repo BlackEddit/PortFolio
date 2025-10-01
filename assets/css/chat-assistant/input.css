@@ -1,19 +1,60 @@
 /* ===========================================
    CHAT INPUT - STYLES
-   Estilos para el área de entrada de texto
+   Estilos para el área de entrada de texto y quick actions
    =========================================== */
+
+/* Quick Actions - Barra horizontal compacta */
+.chat-quick-actions {
+  display: flex;
+  gap: 4px;
+  padding: 10px;
+  background: rgba(16, 185, 129, 0.02);
+  border-bottom: 1px solid rgba(16, 185, 129, 0.06);
+  justify-content: space-between;
+}
+
+.chat-quick-actions::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+.quick-action-btn {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  flex: 1;
+  text-align: center;
+  min-height: 24px;
+}
+
+.quick-action-btn:hover {
+  background: rgba(16, 185, 129, 0.25);
+  border-color: rgba(16, 185, 129, 0.5);
+  color: #059669;
+}
+
+.quick-action-btn:active {
+  transform: translateY(0);
+}
 
 /* Chat Input Container */
 .chat-input-container {
   padding: 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  gap: 12px;
-  align-items: flex-end;
+  display: flex !important;
+  gap: 8px !important;
+  align-items: center !important;
+  flex-direction: row !important;
 }
 
 .chat-input {
-  flex: 1;
+  flex: 1 !important;
   background: rgba(30, 41, 59, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 20px;
@@ -23,8 +64,10 @@
   resize: none;
   max-height: 60px;
   min-height: 40px;
+  height: 40px;
   outline: none;
   transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
 .chat-input:focus {
@@ -37,18 +80,19 @@
 }
 
 .chat-send-btn {
-  width: 40px;
-  height: 40px;
+  width: 40px !important;
+  height: 40px !important;
   border-radius: 50%;
   background: linear-gradient(135deg, #10b981, #059669);
   border: none;
   color: white;
   cursor: pointer;
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  flex-shrink: 0;
+  flex-shrink: 0 !important;
+  box-sizing: border-box;
 }
 
 .chat-send-btn:hover:not(:disabled) {
