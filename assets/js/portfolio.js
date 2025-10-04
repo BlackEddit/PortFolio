@@ -510,7 +510,7 @@ function resetDashboardButtons() {
   const allLoadBtns = document.querySelectorAll('button[onclick="loadDashboard()"]');
   allLoadBtns.forEach(btn => {
     if (btn.textContent.includes('Dashboard Cargado')) {
-      btn.innerHTML = '⚡ Cargar Dashboard';
+      btn.innerHTML = 'Cargar Dashboard';
       btn.disabled = false;
       btn.className = 'flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold shadow-lg hover:shadow-xl hover:shadow-emerald-500/25 transition-all duration-300 hover:scale-105';
     }

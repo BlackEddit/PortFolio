@@ -127,8 +127,8 @@ function clearLoadedDashboard() {
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
               </svg>
             </div>
-            <h4 class="text-xl font-bold text-blue-400 mb-2">🚀 Listo para cargar</h4>
-            <p class="text-lg text-blue-300">Haz clic en "⚡ Cargar Dashboard" para ver los datos interactivos</p>
+            <h4 class="text-xl font-bold text-blue-400 mb-2">Listo para cargar</h4>
+            <p class="text-lg text-blue-300">Haz clic en "Cargar Dashboard" para ver los datos interactivos</p>
             <div class="mt-6 text-sm text-zinc-500">
               <p>📊 Dimensiones optimizadas: 80vh × 100% para mejor visualización de Power BI</p>
             </div>
@@ -147,7 +147,7 @@ function resetAllLoadButtons() {
   const allLoadBtns = document.querySelectorAll('button[onclick="loadDashboard()"]');
   allLoadBtns.forEach(btn => {
     if (btn.textContent.includes('Dashboard Cargado')) {
-      btn.innerHTML = '⚡ Cargar Dashboard';
+      btn.innerHTML = 'Cargar Dashboard';
       btn.disabled = false;
       btn.className = 'flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold shadow-lg hover:shadow-xl hover:shadow-emerald-500/25 transition-all duration-300 hover:scale-105';
     }

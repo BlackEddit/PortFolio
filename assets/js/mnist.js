@@ -82,8 +82,32 @@ class MNISTDemo {
 
   clear() {
     this.setupCanvas();
-    document.getElementById('mnistTop').innerHTML = '';
-    document.getElementById('mnistBars').innerHTML = '';
+    
+    // Limpiar elementos nuevos
+    const predictionBox = document.getElementById('prediction');
+    if (predictionBox) {
+      predictionBox.innerHTML = `
+        <div class="text-6xl font-bold text-purple-300 mb-2">?</div>
+        <p class="text-purple-200">Dibuja un número para ver la predicción</p>
+      `;
+    }
+    
+    const confidenceDisplay = document.getElementById('confidenceDisplay');
+    if (confidenceDisplay) {
+      confidenceDisplay.innerHTML = `
+        <div class="text-purple-300 text-center py-4 border border-purple-400/30 rounded bg-purple-800/20 text-sm">
+          Esperando dibujo...
+        </div>
+      `;
+    }
+    
+    // Limpiar elementos viejos (fallback)
+    const mnistTop = document.getElementById('mnistTop');
+    if (mnistTop) mnistTop.innerHTML = '';
+    
+    const mnistBars = document.getElementById('mnistBars');
+    if (mnistBars) mnistBars.innerHTML = '';
+    
     const prevCtx = document.getElementById('mnistPreview')?.getContext('2d');
     if (prevCtx) {
       prevCtx.clearRect(0, 0, 56, 56);
@@ -91,27 +115,37 @@ class MNISTDemo {
   }
 
   async loadModel() {
-    const topBox = document.getElementById('mnistTop');
-    if (!topBox) return;
+    console.log('🔄 Iniciando carga de modelo MNIST...');
 
     const modelUrls = [
       "https://storage.googleapis.com/tfjs-models/tfjs/mnist_transfer_cnn_v1/model.json",
       "https://hpssjellis.github.io/beginner-tensorflowjs-examples-in-javascript/saved-models/mnist/convnet/my-mnist01.json"
     ];
 
-    topBox.textContent = "Cargando modelo…";
-    
-    for (const url of modelUrls) {
+    for (let i = 0; i < modelUrls.length; i++) {
+      const url = modelUrls[i];
+      console.log(`🌐 Intentando cargar modelo ${i + 1}/${modelUrls.length}:`, url);
+      
       try {
         this.model = await tf.loadLayersModel(url);
-        topBox.textContent = "Modelo listo ✅";
+        console.log('✅ Modelo cargado exitosamente:', url);
+        
+        // Mostrar estado en la UI si existe el elemento
+        const predictionBox = document.getElementById('prediction');
+        if (predictionBox) {
+          const currentContent = predictionBox.innerHTML;
+          if (currentContent.includes('?')) {
+            predictionBox.innerHTML = currentContent.replace('Dibuja un número para ver la predicción', 'Modelo listo ✅ - Dibuja un número');
+          }
+        }
         return;
       } catch (err) {
-        console.warn("Falló modelo:", url, err);
+        console.warn(`❌ Falló modelo ${i + 1}:`, url, err.message);
       }
     }
     
-    topBox.innerHTML = `<span class="text-red-300">No se pudo cargar el modelo</span>`;
+    console.error('💥 No se pudo cargar ningún modelo MNIST');
+    alert('No se pudo cargar el modelo de IA. Verifica tu conexión a internet.');
   }
 
   preprocess() {
@@ -142,37 +176,45 @@ class MNISTDemo {
   }
 
   async predict() {
+    console.log('🎯 Predict button clicked!');
+    
     if (!this.model) {
-      document.getElementById('mnistTop').textContent = "Modelo no cargado";
+      console.error('❌ Modelo no cargado');
+      alert("Modelo no cargado. Espera un momento y vuelve a intentar.");
       return;
     }
 
     const predictBtn = document.getElementById('mnistPredict');
-    const predictText = document.getElementById('predictText');
-    const predictSpinner = document.getElementById('predictSpinner');
     
-    // Loading state
-    predictBtn.disabled = true;
-    predictText.classList.add('hidden');
-    predictSpinner.classList.remove('hidden');
+    // Simple loading state
+    if (predictBtn) {
+      predictBtn.disabled = true;
+      predictBtn.textContent = "Prediciendo...";
+    }
 
     try {
+      console.log('🔄 Procesando imagen...');
       const input = this.preprocess();
+      
+      console.log('🤖 Ejecutando modelo...');
       const prediction = this.model.predict(input);
       const probabilities = Array.from(await prediction.data());
+      
+      console.log('✅ Probabilidades:', probabilities);
       
       input.dispose();
       prediction.dispose();
       
       this.renderResults(probabilities);
     } catch (error) {
-      console.error("Prediction error:", error);
-      document.getElementById('mnistTop').textContent = "Error al predecir";
+      console.error("❌ Error en predicción:", error);
+      alert("Error al predecir. Revisa la consola para más detalles.");
     } finally {
-      // Reset loading state
-      predictBtn.disabled = false;
-      predictText.classList.remove('hidden');
-      predictSpinner.classList.add('hidden');
+      // Reset button
+      if (predictBtn) {
+        predictBtn.disabled = false;
+        predictBtn.innerHTML = '<div class="flex items-center gap-2"><span class="text-lg">🎯</span><span>Predecir</span></div>';
+      }
     }
   }
 
@@ -184,21 +226,52 @@ class MNISTDemo {
   renderTop(probabilities) {
     const top = probabilities
       .map((p, i) => ({ p, i }))
-      .sort((a, b) => b.p - a.p)
-      .slice(0, 3);
+      .sort((a, b) => b.p - a.p);
     
-    const topBox = document.getElementById('mnistTop');
-    if (topBox) {
-      topBox.innerHTML = top.map(t => `
-        <div class="flex items-center justify-between border border-white/10 rounded px-2 py-1">
-          <div class="font-semibold text-lg">${t.i}</div>
-          <div class="text-emerald-400 font-medium">${(t.p * 100).toFixed(1)}%</div>
-        </div>
-      `).join('');
+    const winner = top[0];
+    const confidence = (winner.p * 100).toFixed(1);
+    
+    console.log(`🎯 Predicción: ${winner.i} con ${confidence}% de confianza`);
+    
+    // Actualizar predicción principal
+    const predictionBox = document.getElementById('prediction');
+    if (predictionBox) {
+      predictionBox.innerHTML = `
+        <div class="text-6xl font-bold text-purple-300 mb-2">${winner.i}</div>
+        <p class="text-purple-200">Confianza: ${confidence}%</p>
+      `;
+      console.log('✅ UI actualizada con predicción');
+    } else {
+      console.warn('⚠️ No se encontró elemento #prediction');
     }
+    
+    // Fallback para debugging
+    console.log('Top 3 predicciones:', top.slice(0, 3).map(t => `${t.i}: ${(t.p * 100).toFixed(1)}%`));
   }
 
   renderBars(probabilities) {
+    // Actualizar nuevo sistema de confianza
+    const confidenceDisplay = document.getElementById('confidenceDisplay');
+    if (confidenceDisplay) {
+      confidenceDisplay.innerHTML = '';
+      probabilities.forEach((p, d) => {
+        const pct = (p * 100).toFixed(1);
+        const isWinner = pct == Math.max(...probabilities.map(x => (x * 100).toFixed(1)));
+        
+        const el = document.createElement('div');
+        el.className = `flex items-center gap-2 p-2 rounded ${isWinner ? 'bg-purple-600/30 border border-purple-400/50' : 'bg-purple-800/20 border border-purple-600/30'}`;
+        el.innerHTML = `
+          <div class="w-6 text-center font-bold ${isWinner ? 'text-purple-200' : 'text-purple-400'}">${d}</div>
+          <div class="flex-1 h-2 bg-purple-900 rounded overflow-hidden">
+            <div class="h-2 ${isWinner ? 'bg-purple-400' : 'bg-purple-600'} transition-all duration-300" style="width:${pct}%"></div>
+          </div>
+          <div class="w-12 text-right text-sm ${isWinner ? 'text-purple-200' : 'text-purple-400'}">${pct}%</div>
+        `;
+        confidenceDisplay.appendChild(el);
+      });
+    }
+    
+    // Fallback para el viejo sistema
     const barsBox = document.getElementById('mnistBars');
     if (barsBox) {
       barsBox.innerHTML = '';
