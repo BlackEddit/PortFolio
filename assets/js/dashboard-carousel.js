@@ -52,51 +52,116 @@ let isPaused = false;
  */
 function updateDashboard(index) {
   const dashboard = DASHBOARDS[index];
-  const iframe = document.getElementById('pbiFrame');
-  const title = document.getElementById('dashTitle');
-  const counter = document.getElementById('dashCounter');
-  const fallbackLink = document.getElementById('currentDashboardLink');
+  console.log(`🎯 Actualizando dashboard a índice: ${index}`, dashboard);
   
-  // Actualizar iframe
-  if (iframe) {
-    iframe.src = dashboard.url;
-    iframe.title = dashboard.title;
-  }
+  // Mapear índices a IDs de slides HTML
+  const slideIds = ['dashboard-ford', 'dashboard-institucionales'];
   
-  // Actualizar UI
-  if (title) title.textContent = dashboard.title;
-  if (counter) counter.textContent = `${index + 1}/${DASHBOARDS.length}`;
+  // Actualizar slides - mostrar solo el seleccionado
+  slideIds.forEach((slideId, i) => {
+    const slide = document.getElementById(slideId);
+    if (slide) {
+      if (i === index) {
+        // Slide activo
+        slide.style.transform = 'translateX(0%)';
+        slide.style.opacity = '1';
+        slide.classList.remove('opacity-50');
+        console.log(`✅ Mostrando slide: ${slideId}`);
+      } else if (i < index) {
+        // Slides anteriores
+        slide.style.transform = 'translateX(-100%)';
+        slide.style.opacity = '0.5';
+        slide.classList.add('opacity-50');
+      } else {
+        // Slides siguientes
+        slide.style.transform = 'translateX(100%)';
+        slide.style.opacity = '0.5';
+        slide.classList.add('opacity-50');
+      }
+    } else {
+      console.warn(`⚠️ No se encontró el slide: ${slideId}`);
+    }
+  });
   
-  // Actualizar link de fallback con el dashboard actual
-  if (fallbackLink) {
-    fallbackLink.href = dashboard.url;
-  }
-  
-  // Actualizar botón de acceso rápido
-  const quickAccessBtn = document.getElementById('quickAccessBtn');
-  if (quickAccessBtn) {
-    quickAccessBtn.href = dashboard.url;
-  }
+  // Actualizar contador
+  const currentCounter = document.getElementById('current-dash');
+  const totalCounter = document.getElementById('total-dash');
+  if (currentCounter) currentCounter.textContent = index + 1;
+  if (totalCounter) totalCounter.textContent = DASHBOARDS.length;
   
   // Actualizar dots indicadores
   for (let i = 0; i < DASHBOARDS.length; i++) {
     const dot = document.getElementById(`dot-${i}`);
     if (dot) {
       dot.className = i === index 
-        ? 'w-2 h-2 rounded-full bg-blue-500' 
-        : 'w-2 h-2 rounded-full bg-zinc-600';
+        ? 'w-4 h-4 rounded-full bg-blue-600 transition-all hover:scale-110'
+        : 'w-4 h-4 rounded-full bg-blue-600/30 hover:bg-blue-600/50 transition-all hover:scale-110';
     }
   }
   
   currentDashIndex = index;
-  console.log(`Dashboard cambiado a: ${dashboard.title}`);
+  
+  // ⚡ LIMPIAR IFRAME CARGADO AL CAMBIAR DE DASHBOARD
+  clearLoadedDashboard();
+  
+  console.log(`✅ Dashboard cambiado a: ${dashboard.title}`);
+}
+
+// Función para limpiar el dashboard cargado
+function clearLoadedDashboard() {
+  const largePreview = document.getElementById('large-dashboard-preview');
+  if (largePreview && largePreview.querySelector('iframe')) {
+    console.log('🗑️ Liberando iframe anterior...');
+    
+    // Restaurar contenido por defecto
+    largePreview.innerHTML = `
+      <div class="mb-6 text-center">
+        <h3 class="text-3xl font-bold text-blue-300 mb-3">📊 Dashboard Interactivo</h3>
+        <p class="text-zinc-400 text-lg">Vista completa del dashboard - Interactúa directamente con los datos</p>
+      </div>
+      <div class="w-full rounded-xl border border-blue-500/60 bg-zinc-900 shadow-2xl" style="height: 80vh; min-height: 700px; max-height: 900px;">
+        <div class="w-full h-full flex items-center justify-center text-center text-blue-400 p-8">
+          <div>
+            <div class="w-24 h-24 mx-auto mb-6 bg-blue-600/20 rounded-full flex items-center justify-center shadow-xl">
+              <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+              </svg>
+            </div>
+            <h4 class="text-xl font-bold text-blue-400 mb-2">🚀 Listo para cargar</h4>
+            <p class="text-lg text-blue-300">Haz clic en "⚡ Cargar Dashboard" para ver los datos interactivos</p>
+            <div class="mt-6 text-sm text-zinc-500">
+              <p>📊 Dimensiones optimizadas: 80vh × 100% para mejor visualización de Power BI</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  
+  // Resetear botones de carga a estado inicial
+  resetAllLoadButtons();
+}
+
+// Función para resetear todos los botones de carga
+function resetAllLoadButtons() {
+  const allLoadBtns = document.querySelectorAll('button[onclick="loadDashboard()"]');
+  allLoadBtns.forEach(btn => {
+    if (btn.textContent.includes('Dashboard Cargado')) {
+      btn.innerHTML = '⚡ Cargar Dashboard';
+      btn.disabled = false;
+      btn.className = 'flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold shadow-lg hover:shadow-xl hover:shadow-emerald-500/25 transition-all duration-300 hover:scale-105';
+    }
+  });
+  console.log('🔄 Botones de carga reseteados');
 }
 
 /**
  * Avanza al siguiente dashboard
  */
 function nextDashboard() {
+  console.log('➡️ NEXT: Ir al siguiente dashboard (actual:', currentDashIndex, ')');
   const nextIndex = (currentDashIndex + 1) % DASHBOARDS.length;
+  console.log('➡️ NEXT: Cambiando de', currentDashIndex, 'a', nextIndex);
   updateDashboard(nextIndex);
 }
 
@@ -104,7 +169,9 @@ function nextDashboard() {
  * Retrocede al dashboard anterior
  */
 function prevDashboard() {
+  console.log('⬅️ PREV: Ir al dashboard anterior (actual:', currentDashIndex, ')');
   const prevIndex = (currentDashIndex - 1 + DASHBOARDS.length) % DASHBOARDS.length;
+  console.log('⬅️ PREV: Cambiando de', currentDashIndex, 'a', prevIndex);
   updateDashboard(prevIndex);
 }
 
@@ -142,26 +209,10 @@ function pauseCarousel() {
  * Inicializa el sistema de carrusel
  */
 function initDashboardCarousel() {
-  console.log('Inicializando carrusel de dashboards...');
+  console.log('🚀 Inicializando carrusel de dashboards...');
   
-  // Event listeners para controles
-  const nextBtn = document.getElementById('nextDash');
-  const prevBtn = document.getElementById('prevDash');
-  const playPauseBtn = document.getElementById('playPause');
-  
-  if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
-      nextDashboard();
-      pauseCarousel(); // Pausar auto-play al interactuar
-    });
-  }
-  
-  if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-      prevDashboard();
-      pauseCarousel(); // Pausar auto-play al interactuar
-    });
-  }
+  // Los botones usan onclick en HTML, no necesitamos event listeners duplicados
+  console.log('🔍 Botones configurados con onclick en HTML - sin duplicar eventos');
   
   if (playPauseBtn) {
     playPauseBtn.addEventListener('click', () => {
@@ -183,12 +234,24 @@ function initDashboardCarousel() {
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', initDashboardCarousel);
 
-// Exponer funciones globalmente si es necesario
+// Función para obtener el índice actual
+function getCurrentIndex() {
+  return currentDashIndex;
+}
+
+// Exponer funciones globalmente para acceso desde HTML
+window.updateDashboard = updateDashboard;
+window.nextDashboard = nextDashboard;
+window.prevDashboard = prevDashboard;
+
 window.DashboardCarousel = {
   updateDashboard,
   nextDashboard,
   prevDashboard,
   startCarousel,
   pauseCarousel,
+  getCurrentIndex,
+  clearLoadedDashboard,
+  resetAllLoadButtons,
   DASHBOARDS
 };

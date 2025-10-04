@@ -402,3 +402,272 @@ class NightWolfPortfolio {
 document.addEventListener('DOMContentLoaded', () => {
   new NightWolfPortfolio();
 });
+
+// ===== MÓDULOS CARGADOS EXTERNAMENTE =====
+// - navigation.js: navigateToSection(), navigateBack()
+// - collaboration.js: showCollaborationModal(), etc.
+
+// ============================= CARRUSEL DE DASHBOARDS ===================================
+// FUNCIONES MOVIDAS A dashboard-carousel.js PARA EVITAR CONFLICTOS
+// =====================================================================================
+
+function openPowerBI(dashboardType) {
+  const urls = {
+    'ford': 'https://app.powerbi.com/view?r=eyJrIjoiYjYzZDFlYWQtODQ5Ny00OWY0LWE1OGItNGUxN2FkM2I3NmE1IiwidCI6IjEyMDFlNjcwLTI4YjQtNDg1ZC05OTNhLWIxYzU0OGRhMmZhYiJ9',
+    'institucionales': 'https://app.powerbi.com/view?r=eyJrIjoiZmY2YjJmOTgtYzQ0Zi00NzgxLWE0YWMtYWEzNzE0MzQyMWRlIiwidCI6IjEyMDFlNjcwLTI4YjQtNDg1ZC05OTNhLWIxYzU0OGRhMmZhYiJ9'
+  };
+  
+  window.open(urls[dashboardType], '_blank');
+  
+  const messages = {
+    'ford': '🚗 ¡Dashboard Ford abierto! Explora las tendencias de ventas en detalle.',
+    'institucionales': '🏛️ ¡Dashboard Institucional abierto! Revisa todos los indicadores de gestión.'
+  };
+  
+  sendCrowMessage(messages[dashboardType]);
+}
+
+// Función global para cargar dashboards
+window.loadDashboard = function() {
+  console.log('🔄 LoadDashboard llamado - Versión mejorada');
+  
+  // Obtener datos del carrusel desde dashboard-carousel.js
+  if (!window.DashboardCarousel || !window.DashboardCarousel.DASHBOARDS) {
+    console.error('❌ DashboardCarousel no está disponible');
+    return false;
+  }
+  
+  const currentIndex = window.DashboardCarousel.getCurrentIndex ? window.DashboardCarousel.getCurrentIndex() : 0;
+  const currentDashboard = window.DashboardCarousel.DASHBOARDS[currentIndex];
+  
+  console.log('📊 Dashboard actual:', currentIndex, currentDashboard);
+  
+  // Buscar el contenedor de la ventana grande (común para todos)
+  const largePreview = document.getElementById('large-dashboard-preview');
+  
+  if (largePreview) {
+    console.log('✅ Cargando en ventana grande...');
+    
+    // Crear contenedor específico para Power BI
+    const iframeContainer = document.createElement('div');
+    iframeContainer.className = 'w-full h-full min-h-[600px] relative';
+    
+    // Crear iframe optimizado para Power BI
+    const iframe = document.createElement('iframe');
+    iframe.src = currentDashboard.url; // Usar la URL del dashboard actual
+    iframe.frameBorder = '0';
+    iframe.allowFullscreen = true;
+    iframe.setAttribute('allowtransparency', 'true');
+    iframe.setAttribute('scrolling', 'no');
+    iframe.style.cssText = `
+      width: 100% !important;
+      height: 100% !important;
+      min-height: 600px !important;
+      border: none !important;
+      display: block !important;
+    `;
+    
+    // Añadir evento de carga
+    iframe.onload = function() {
+      console.log('✅ Iframe Power BI cargado correctamente');
+      // Asegurar dimensiones después de cargar
+      setTimeout(() => {
+        iframe.style.height = '100%';
+        iframe.style.minHeight = '600px';
+      }, 1000);
+    };
+    
+    // Ensamblar y reemplazar contenido
+    iframeContainer.appendChild(iframe);
+    largePreview.innerHTML = '';
+    largePreview.appendChild(iframeContainer);
+    
+    // Actualizar solo el botón del dashboard actual
+    const slideIds = ['dashboard-ford', 'dashboard-institucionales'];
+    const currentSlide = document.getElementById(slideIds[currentIndex]);
+    if (currentSlide) {
+      const loadBtn = currentSlide.querySelector('button[onclick="loadDashboard()"]');
+      if (loadBtn && loadBtn.textContent.includes('Cargar Dashboard')) {
+        loadBtn.innerHTML = '✅ Dashboard Cargado';
+        loadBtn.disabled = true;
+        loadBtn.className = 'flex items-center gap-2 px-6 py-3 rounded-xl bg-green-600/80 text-white font-semibold cursor-not-allowed opacity-75';
+      }
+    }
+    
+    // Mostrar la ventana grande
+    largePreview.style.display = 'block';
+    
+    console.log('✅ Dashboard cargado exitosamente en ventana grande');
+    return true;
+  } else {
+    console.error('❌ No se encontró la ventana grande de preview');
+    return false;
+  }
+};
+
+// Función para resetear botones al cambiar dashboard
+function resetDashboardButtons() {
+  const allLoadBtns = document.querySelectorAll('button[onclick="loadDashboard()"]');
+  allLoadBtns.forEach(btn => {
+    if (btn.textContent.includes('Dashboard Cargado')) {
+      btn.innerHTML = '⚡ Cargar Dashboard';
+      btn.disabled = false;
+      btn.className = 'flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold shadow-lg hover:shadow-xl hover:shadow-emerald-500/25 transition-all duration-300 hover:scale-105';
+    }
+  });
+  
+  // Ocultar la ventana grande hasta que se cargue nuevo dashboard
+  const largePreview = document.getElementById('large-dashboard-preview');
+  if (largePreview) {
+    largePreview.style.display = 'none';
+  }
+}
+
+// Carrusel inicializado en dashboard-carousel.js
+
+// ===== CUERVO PROACTIVO CON GROQ IA =====
+let crowMessageTimer;
+let messagesShown = [];
+
+function getCrowWelcomeMessage(sectionId) {
+  const messages = {
+    'dashboards-section': [
+      '¡Bienvenido a la sección de dashboards! 📊 ¿Te gustaría que te explique algún KPI específico?',
+      'Estos dashboards cuentan historias increíbles con datos. ¿Qué te llama más la atención?',
+      '¿Sabías que Edgar usa DAX avanzado para crear métricas personalizadas? ¡Pregúntame más!'
+    ],
+    'ml-section': [
+      '¡Entraste al mundo del Machine Learning! 🤖 ¿Quieres probar el reconocedor de dígitos?',
+      'Los modelos aquí corren 100% en tu navegador. ¡Es increíble lo que puede hacer TensorFlow.js!',
+      '¿Te animas a dibujar un número? El modelo neuronal está esperando...'
+    ],
+    'data-section': [
+      '¡El proyecto DENUE es impresionante! 🎯 ¿Te interesa el análisis geoespacial?',
+      'Este proyecto analiza más de 150,000 negocios en León. ¿Tienes alguna ciudad en mente para algo similar?',
+      '¿Sabías que Edgar puede crear análisis similares para cualquier ciudad? ¡Pregúntale cómo!'
+    ]
+  };
+  
+  const sectionMessages = messages[sectionId] || ['¡Hola! ¿En qué puedo ayudarte?'];
+  return sectionMessages[Math.floor(Math.random() * sectionMessages.length)];
+}
+
+async function generateProactiveCrowMessage() {
+  // Mensajes basados en el tiempo que llevas en la página
+  const timeSpent = Date.now() - (window.portfolioStartTime || Date.now());
+  const minutes = Math.floor(timeSpent / 60000);
+  
+  if (minutes < 2) {
+    return getRandomMessage([
+      '¡Hola! 👋 ¿Te gusta lo que ves hasta ahora?',
+      '¿Necesitas ayuda navegando? ¡Estoy aquí para eso!',
+      '💡 Tip: Haz click en las tarjetas para ver proyectos detallados',
+      '¿Tienes alguna pregunta sobre los proyectos de Edgar?'
+    ]);
+  } else if (minutes < 5) {
+    return getRandomMessage([
+      '¿Ya exploraste algún proyecto? ¡Me encantaría saber qué opinas!',
+      '💬 ¿Te interesa alguna colaboración en particular?',
+      '🚀 ¿Sabías que Edgar está disponible para proyectos freelance?',
+      '¿Qué tipo de datos manejas en tu trabajo? ¡Podríamos ayudarte!'
+    ]);
+  } else {
+    try {
+      // Intentar generar mensaje con Groq IA
+      return await generateGroqMessage();
+    } catch (error) {
+      console.log('Groq no disponible, usando mensaje predefinido');
+      return getRandomMessage([
+        '🔥 Parece que estás realmente interesado. ¿Hablamos de un proyecto?',
+        '¿Te gustaría agendar una llamada con Edgar?',
+        '💼 ¿Tienes algún reto de datos que necesites resolver?',
+        '¡Hey! ¿Qué tal si me cuentas sobre tu empresa o proyecto?'
+      ]);
+    }
+  }
+}
+
+function getRandomMessage(messages) {
+  return messages[Math.floor(Math.random() * messages.length)];
+}
+
+async function generateGroqMessage() {
+  // Intentar usar la API de Groq para generar mensajes personalizados
+  const prompt = `Eres un cuervo asistente digital en el portafolio de Edgar, un Data Scientist y BI Developer. 
+  Genera un mensaje corto y amigable (máximo 100 caracteres) que invite a interactuar con los proyectos o a contactar a Edgar. 
+  Sé creativo pero profesional. El usuario lleva ${Math.floor((Date.now() - window.portfolioStartTime) / 60000)} minutos viendo el portafolio.`;
+
+  try {
+    const response = await fetch('/api/groq', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt })
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      return data.message || '¡Hola! ¿En qué puedo ayudarte hoy? 😊';
+    }
+  } catch (error) {
+    console.log('Error generando mensaje Groq:', error);
+  }
+  
+  return '¿Te gustaría saber más sobre algún proyecto específico? 🤔';
+}
+
+function sendCrowMessage(message) {
+  if (window.chatAssistantInstance && window.chatAssistantInstance.addMessage) {
+    window.chatAssistantInstance.addMessage(message, 'assistant');
+    
+    // Abrir chat si no está abierto
+    if (!window.chatAssistantInstance.isOpen) {
+      window.chatAssistantInstance.toggleChat();
+    }
+  }
+}
+
+function startProactiveCrow() {
+  // Mensaje inicial después de 30 segundos
+  setTimeout(() => {
+    sendCrowMessage('¡Hola! 👋 Soy tu asistente. ¿Te ayudo a explorar los proyectos de Edgar?');
+  }, 30000);
+  
+  // Mensajes periódicos cada 2-3 minutos
+  crowMessageTimer = setInterval(async () => {
+    const message = await generateProactiveCrowMessage();
+    sendCrowMessage(message);
+  }, 150000); // 2.5 minutos
+}
+
+// ===== FUNCIONES ESPECÍFICAS DE SECCIONES =====
+function loadDashboard(type) {
+  const preview = document.getElementById('dashboard-preview');
+  if (type === 'ford') {
+    preview.innerHTML = `
+      <iframe class="w-full h-full" 
+              src="https://app.powerbi.com/view?r=eyJrIjoiYjYzZDFlYWQtODQ5Ny00OWY0LWE1OGItNGUxN2FkM2I3NmE1IiwidCI6IjEyMDFlNjcwLTI4YjQtNDg1ZC05OTNhLWIxYzU0OGRhMmZhYiJ9"
+              frameborder="0" allowfullscreen="true">
+      </iframe>
+    `;
+    
+    setTimeout(() => {
+      sendCrowMessage('¡Dashboard cargado! 📊 ¿Ves cómo los datos cobran vida? ¿Tienes preguntas sobre algún gráfico?');
+    }, 2000);
+  }
+}
+
+function refreshDataApp() {
+  const iframe = document.getElementById('denueApp');
+  iframe.src = iframe.src;
+  sendCrowMessage('¡App actualizada! 🔄 ¿Qué tal si exploras los filtros geográficos?');
+}
+
+// Inicializar cuando cargue el DOM
+document.addEventListener('DOMContentLoaded', () => {
+  window.portfolioStartTime = Date.now();
+  
+  // Iniciar cuervo proactivo después de que todo esté listo
+  setTimeout(() => {
+    startProactiveCrow();
+  }, 5000);
+});
